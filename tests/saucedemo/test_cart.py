@@ -1,6 +1,6 @@
 from seleniumbase import BaseCase
-from pages.login_page import LoginPage
-from pages.cart_page import CartPage
+from pages.saucedemo_pages.login_page import LoginPage
+from pages.saucedemo_pages.cart_page import CartPage
 
 
 class CartTests(BaseCase):

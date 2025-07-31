@@ -1,5 +1,5 @@
 from seleniumbase import BaseCase
-from pages.login_page import LoginPage
+from pages.saucedemo_pages.login_page import LoginPage
 from config.credentials import TestData
 
 class SauceDemoLoginTests(BaseCase):
