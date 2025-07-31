@@ -1,4 +1,4 @@
-#credentials.py
+# config/credentials.py
 
 class TestData:
     BASE_URL = "https://www.saucedemo.com/"
