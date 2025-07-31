@@ -39,8 +39,9 @@ but:
 
 ---
 
-⚙️ **Why I build this way:**  
-Because test automation should help you think better — not just run faster.
+⚙️ Why I build this way
+Because test automation should help you test faster — but also make it fun, challenging, and meaningful.
+This playground isn’t just about passing checks — it’s where I explore smarter workflows, AI tooling, and early security testing strategies.
 
 ---
 
