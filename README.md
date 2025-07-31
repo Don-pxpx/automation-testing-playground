@@ -1,40 +1,49 @@
-### 👋🏾 Hi, I’m Sizwe  
-QA Engineer | Automation Architect-in-the-Making | AI Agent Explorer  
+👋🏽 Hi, I’m Sizwe
+
+**QA Engineer | Automation Architect-in-the-Making | AI Agent Explorer**
 
 ---
 
-🧪 **This GitHub is my lab.**  
-I use it to sharpen my automation skills and build smart, scalable testing workflows.
+🌿 **This repo is my sandbox.**
 
-My approach to testing isn’t just “does it work” — it’s:
-- **How well is it built?**
-- **How repeatable is it?**
-- **How fast can I catch it when it breaks?**
-- **How do I future-proof it?**
+It’s where I sharpen my automation skills and prototype clean, intelligent, and maintainable test strategies — not just scripts that “pass.”
 
----
-
-🚀 **What I focus on here:**
-- ✅ Modular & maintainable test frameworks (clean locators, configs, data files)
-- 🤖 Building AI-assisted testing agents (exploring smarter, self-healing test strategies)
-- 📊 Meaningful test reporting (emoji logs, readable assertions, real visibility)
-- 🔐 Early security testing experiments (auth flows, form validation, boundary tests)
-- 🧠 Creating automation that's actually smart — not just fast
+I treat testing like engineering. My questions aren’t just:
+> “Does it work?”  
+but:  
+- 🧱 *How clean is the test architecture?*  
+- 🔁 *Can it scale and repeat reliably?*  
+- 🚨 *How early can I detect failures — and why?*  
+- 🔮 *Can I design for change, not just for now?*
 
 ---
 
-🧩 **Repos I'm working on:**
+🚀 **On this repo, you’ll find me focusing on:**
+
+- ✅ Building maintainable test frameworks (modular locators, configs, data-driven patterns)
+- 🤖 Exploring AI-assisted testing agents (self-healing tests, adaptive test flows)
+- 📘 Crafting expressive, human-readable test reports (emoji logs, clean assertions, visibility)
+- 🔐 Experimenting with early security validation (auth flows, form guards, boundary checks)
+- 🧠 Automating with intention — *not just speed, but clarity and strategy*
+
+---
+
+🌱 **What I’m currently building:**
+
 - [`automation-testing-playground`](https://github.com/Don-pxpx/automation-testing-playground)  
-  A full-stack test lab: login, cart flows, checkout, removals, real test structure.
+  My structured test lab: login, cart logic, flexible checkout flows, test cleanup.  
+  Built with reusable components, data-layer flexibility, and emoji-powered reporting.
+
 - `Bots-sandbox` *(private)*  
-  A personal sandbox for AI/LLM-based test agents and future automation tools.
+  Where I explore AI/LLM-powered testing agents and smart automation tools.
 
 ---
 
-🛠️ **Why I build this way:**  
-Because test automation should *help you think better*, not just run faster.
+⚙️ **Why I build this way:**  
+Because test automation should help you think better — not just run faster.
 
 ---
 
-📫 Reach me  
+📎 **Let’s connect**  
 [LinkedIn →](https://linkedin.com/in/sizwe-lethuli-59274919)
+
