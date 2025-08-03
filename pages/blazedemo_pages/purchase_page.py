@@ -29,3 +29,6 @@ class PurchasePage:
 
     def submit_purchase(self):
         self.base.click("input[type='submit']")
+
+    def get_card_type_options(self):
+        return [option.text for option in self.base.find_elements("select#cardType option")]

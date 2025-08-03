@@ -17,6 +17,7 @@ class ConfirmationPage:
         return details
 
     def get_confirmation_message(self):
+        self.base.wait_for_element("h1", timeout=10)  # Explicit wait
         return self.base.get_text("h1")
 
     def is_confirmation_successful(self):
