@@ -3,3 +3,5 @@
 .env
 *.env
 Artifacts/Reports/
+blazedemo_http.html
+blazedemo_https.html
