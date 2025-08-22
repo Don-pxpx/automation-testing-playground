@@ -3,6 +3,8 @@ class PurchasePage:
         self.base = base  # SeleniumBase test class instance
 
     def fill_user_details(self, name, address, city, state, zip_code, card_number):
+        # Ensure purchase form is loaded
+        self.base.wait_for_element_visible("input#inputName", timeout=15)
         self.base.type("input#inputName", name)
         self.base.type("input#address", address)
         self.base.type("input#city", city)

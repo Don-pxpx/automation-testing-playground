@@ -32,6 +32,7 @@ class BookingWithCardTypesTest(BaseCase):
         logger.note(f"Selected Destination City: {destination_city}")
 
         home.open_homepage()
+        self.wait_for_element_visible("select[name='fromPort']", timeout=10)
         home.select_departure_city(departure_city)
         home.select_destination_city(destination_city)
         home.click_find_flights()

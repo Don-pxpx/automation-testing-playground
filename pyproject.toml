@@ -1,0 +1,21 @@
+﻿[tool.black]
+line-length = 88
+target-version = ['py313']
+
+[tool.isort]
+profile = 'black'
+
+[tool.ruff]
+line-length = 88
+target-version = 'py313'
+select = ['E','F','I','UP','B','SIM','PL','TID','C90','PYI']
+ignore = ['E203']
+exclude = ['__pycache__', '.pytest_cache']
+
+[tool.pytest.ini_options]
+addopts = '-ra -q'
+testpaths = ['tests']
+markers = [
+  'smoke: quick checks',
+  'e2e: full end-to-end browser tests'
+]
