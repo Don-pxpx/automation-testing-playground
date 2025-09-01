@@ -42,7 +42,7 @@ jobs:
         set -euo pipefail
         mkdir -p Artifacts/Reports
         echo "🚀 Running Sanity Tests - Quick validation of core functionality"
-        pytest tests/saucedemo/ -v --html=Artifacts/Reports/sanity_test_report.html --self-contained-html --tb=short
+        pytest tests/saucedemo/ tests/api/ -v --html=Artifacts/Reports/sanity_test_report.html --self-contained-html --tb=short
 
     - name: 📤 Upload Sanity Test Report
       if: always()

@@ -3,3 +3,6 @@ selenium~=4.34.2
 Faker~=37.5.3
 prettytable~=3.16.0
 pytest~=8.4.1
+requests==2.32.4
+jsonschema~=4.20.0
+jsonpath-ng~=1.6.0
