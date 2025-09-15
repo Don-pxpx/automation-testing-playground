@@ -1,50 +1,217 @@
-👋🏽 Hi, I’m Sizwe
+# 🚀 Performance & Security Testing Lab
 
-**QA Engineer | Automation Architect-in-the-Making | AI Agent Explorer**
-
----
-
-🌿 **This repo is my sandbox.**
-
-It’s where I sharpen my automation skills and prototype clean, intelligent, and maintainable test strategies — not just scripts that “pass.”
-
-I treat testing like engineering. My questions aren’t just:
-> “Does it work?”  
-but:  
-- 🧱 *How clean is the test architecture?*  
-- 🔁 *Can it scale and repeat reliably?*  
-- 🚨 *How early can I detect failures — and why?*  
-- 🔮 *Can I design for change, not just for now?*
+**A comprehensive non-functional testing playground for performance, security, and monitoring**
 
 ---
 
-🚀 **On this repo, you’ll find me focusing on:**
+## 🎯 **Project Overview**
 
-- ✅ Building maintainable test frameworks (modular locators, configs, data-driven patterns)
-- 🤖 Exploring AI-assisted testing agents (self-healing tests, adaptive test flows)
-- 📘 Crafting expressive, human-readable test reports (emoji logs, clean assertions, visibility)
-- 🔐 Experimenting with early security validation (auth flows, form guards, boundary checks)
-- 🧠 Automating with intention — *not just speed, but clarity and strategy*
+This lab is dedicated to exploring and implementing non-functional testing strategies including:
 
----
-
-🌱 **What I’m currently building:**
-
-- [`automation-testing-playground`](https://github.com/Don-pxpx/automation-testing-playground)  
-  My structured test lab: login, cart logic, flexible checkout flows, test cleanup.  
-  Built with reusable components, data-layer flexibility, and emoji-powered reporting.
-
-- `Bots-sandbox` *(private)*  
-  Where I explore AI/LLM-powered testing agents and smart automation tools.
+- **Performance Testing** - Load, stress, and endurance testing
+- **Security Testing** - Vulnerability scanning and security validation
+- **Monitoring & Analytics** - Real-time metrics and performance insights
+- **API Performance** - REST API load testing and benchmarking
 
 ---
 
-⚙️ Why I build this way
-Because test automation should help you test faster — but also make it fun, challenging, and meaningful.
-This playground isn’t just about passing checks — it’s where I explore smarter workflows, AI tooling, and early security testing strategies.
+## 🏗️ **Architecture**
+
+```
+performance-security-testing-lab/
+├── 📊 performance/           # Performance testing modules
+│   ├── load_testing/        # Load and stress tests
+│   ├── api_performance/     # API performance tests
+│   └── monitoring/          # Performance monitoring tools
+├── 🔒 security/             # Security testing modules
+│   ├── vulnerability_scan/  # Automated security scans
+│   ├── auth_testing/        # Authentication testing
+│   └── penetration_test/    # Penetration testing tools
+├── 📈 analytics/            # Test analytics and reporting
+│   ├── dashboards/          # Real-time dashboards
+│   ├── reports/             # Test reports and metrics
+│   └── visualizations/      # Performance charts
+├── 🛠️ tools/               # Testing tools and utilities
+│   ├── locust_configs/      # Locust configuration files
+│   ├── jmeter_scripts/      # JMeter test plans
+│   └── zap_configs/         # OWASP ZAP configurations
+└── 📋 test_targets/         # Target applications for testing
+    ├── demo_apps/           # Demo applications
+    └── api_endpoints/       # API endpoints for testing
+```
 
 ---
 
-📎 **Let’s connect**  
-[LinkedIn →](https://linkedin.com/in/sizwe-lethuli-59274919)
+## 🚀 **Quick Start**
+
+### Prerequisites
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install additional tools
+# Locust for load testing
+pip install locust
+
+# OWASP ZAP for security testing
+# Download from: https://www.zaproxy.org/download/
+```
+
+### Running Performance Tests
+```bash
+# Load testing with Locust
+python -m locust -f performance/load_testing/locustfile.py
+
+# API performance testing
+pytest tests/performance/test_api_performance.py -v
+
+# Stress testing
+python performance/stress_testing/run_stress_test.py
+```
+
+### Running Security Tests
+```bash
+# Vulnerability scanning
+python security/vulnerability_scan/run_security_scan.py
+
+# Authentication testing
+pytest tests/security/test_authentication.py -v
+
+# OWASP ZAP automated scan
+python security/zap_integration/run_zap_scan.py
+```
+
+---
+
+## 📊 **Performance Testing Features**
+
+### Load Testing
+- **Locust Integration** - Distributed load testing
+- **JMeter Scripts** - Enterprise-grade load testing
+- **Custom Scenarios** - Realistic user behavior simulation
+- **Metrics Collection** - Response time, throughput, error rates
+
+### Stress Testing
+- **Capacity Testing** - Find breaking points
+- **Spike Testing** - Sudden traffic surge simulation
+- **Endurance Testing** - Long-duration performance validation
+- **Resource Monitoring** - CPU, memory, network usage
+
+### API Performance
+- **REST API Testing** - Comprehensive API load testing
+- **GraphQL Performance** - GraphQL endpoint benchmarking
+- **Microservices Testing** - Distributed system performance
+- **Database Performance** - Query optimization and testing
+
+---
+
+## 🔒 **Security Testing Features**
+
+### Vulnerability Scanning
+- **OWASP ZAP Integration** - Automated security scanning
+- **Custom Security Tests** - Application-specific security validation
+- **Dependency Scanning** - Third-party library vulnerability checks
+- **Configuration Testing** - Security misconfiguration detection
+
+### Authentication & Authorization
+- **Login Security Testing** - Brute force, session management
+- **OAuth Testing** - OAuth flow security validation
+- **JWT Testing** - Token security and validation
+- **Role-based Access Control** - Authorization testing
+
+### Penetration Testing
+- **SQL Injection Testing** - Database security validation
+- **XSS Testing** - Cross-site scripting detection
+- **CSRF Testing** - Cross-site request forgery protection
+- **Input Validation** - Security boundary testing
+
+---
+
+## 📈 **Monitoring & Analytics**
+
+### Real-time Monitoring
+- **Performance Dashboards** - Live performance metrics
+- **Alert Systems** - Performance threshold alerts
+- **Resource Tracking** - System resource utilization
+- **Error Tracking** - Real-time error detection
+
+### Analytics & Reporting
+- **Performance Reports** - Detailed performance analysis
+- **Trend Analysis** - Performance regression detection
+- **Capacity Planning** - Resource planning insights
+- **Visualization** - Performance charts and graphs
+
+---
+
+## 🛠️ **Tools & Technologies**
+
+### Performance Testing
+- **Locust** - Python-based load testing
+- **JMeter** - Apache JMeter integration
+- **Artillery** - Node.js load testing
+- **K6** - Modern load testing tool
+
+### Security Testing
+- **OWASP ZAP** - Web application security scanner
+- **Bandit** - Python security linter
+- **Safety** - Dependency vulnerability checker
+- **Custom Security Tools** - Application-specific security testing
+
+### Monitoring
+- **Prometheus** - Metrics collection
+- **Grafana** - Visualization and dashboards
+- **InfluxDB** - Time-series database
+- **Custom Analytics** - Performance analysis tools
+
+---
+
+## 📋 **Test Scenarios**
+
+### Performance Scenarios
+1. **Normal Load** - Expected user traffic simulation
+2. **Peak Load** - High-traffic period testing
+3. **Stress Testing** - Beyond capacity testing
+4. **Spike Testing** - Sudden traffic surge
+5. **Endurance Testing** - Long-duration stability
+
+### Security Scenarios
+1. **Authentication Testing** - Login security validation
+2. **Authorization Testing** - Access control validation
+3. **Input Validation** - Security boundary testing
+4. **Session Management** - Session security testing
+5. **Data Protection** - Sensitive data handling
+
+---
+
+## 🎯 **Getting Started**
+
+1. **Clone the repository**
+2. **Install dependencies** - `pip install -r requirements.txt`
+3. **Configure test targets** - Update configuration files
+4. **Run sample tests** - Start with basic performance tests
+5. **Explore security scans** - Run vulnerability assessments
+6. **Monitor results** - Check dashboards and reports
+
+---
+
+## 📚 **Documentation**
+
+- [Performance Testing Guide](docs/performance-testing.md)
+- [Security Testing Guide](docs/security-testing.md)
+- [Monitoring Setup](docs/monitoring-setup.md)
+- [Tool Configuration](docs/tool-configuration.md)
+
+---
+
+## 🤝 **Contributing**
+
+This is a learning playground for non-functional testing. Feel free to:
+- Add new test scenarios
+- Improve existing tools
+- Share performance insights
+- Enhance security testing capabilities
+
+---
+
+**Built with ❤️ for exploring the world of non-functional testing**
 
