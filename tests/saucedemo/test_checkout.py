@@ -1,4 +1,4 @@
-from seleniumbase import BaseCase
+from playwright.sync_api import Page, expect
 from faker import Faker
 from pages.saucedemo_pages.login_page import LoginPage
 from pages.saucedemo_pages.cart_page import CartPage
@@ -8,13 +8,13 @@ from pages.saucedemo_pages.checkout_page import CheckoutPage
 fake = Faker()
 
 
-class CheckoutTests(BaseCase):
+class TestCheckout:
 
-    def test_complete_checkout_single_item(self):
+    def test_complete_checkout_single_item(self, page: Page):
         print("🛒 Starting: test_complete_checkout_single_item")
-        login = LoginPage(self)
-        cart = CartPage(self)
-        checkout = CheckoutPage(self)
+        login = LoginPage(page)
+        cart = CartPage(page)
+        checkout = CheckoutPage(page)
 
         login.login_with_valid_credentials()
         cart.add_item_by_index(0)
@@ -30,14 +30,14 @@ class CheckoutTests(BaseCase):
         checkout.fill_checkout_form(first, last, zip_code)
         checkout.complete_checkout()
 
-        self.assert_true(checkout.is_checkout_complete())
+        assert checkout.is_checkout_complete()
         print("✅ Checkout finished with Pony Express badge! 🎯")
 
-    def test_checkout_missing_info_shows_error(self):
+    def test_checkout_missing_info_shows_error(self, page: Page):
         print("🚨 Starting: test_checkout_missing_info_shows_error")
-        login = LoginPage(self)
-        cart = CartPage(self)
-        checkout = CheckoutPage(self)
+        login = LoginPage(page)
+        cart = CartPage(page)
+        checkout = CheckoutPage(page)
 
         login.login_with_valid_credentials()
         cart.add_item_by_index(1)
@@ -47,14 +47,14 @@ class CheckoutTests(BaseCase):
         checkout.fill_checkout_form("", "", "")
         error_msg = checkout.get_error_text()
 
-        self.assert_in("Error", error_msg)
+        assert "Error" in error_msg
         print(f"❌ Error caught as expected: {error_msg}")
 
-    def test_checkout_with_multiple_items(self):
+    def test_checkout_with_multiple_items(self, page: Page):
         print("🛒 Starting: test_checkout_with_multiple_items")
-        login = LoginPage(self)
-        cart = CartPage(self)
-        checkout = CheckoutPage(self)
+        login = LoginPage(page)
+        cart = CartPage(page)
+        checkout = CheckoutPage(page)
 
         login.login_with_valid_credentials()
         print("📦 Adding 3 random items to cart...")
@@ -72,14 +72,14 @@ class CheckoutTests(BaseCase):
         checkout.fill_checkout_form(first, last, zip_code)
         checkout.complete_checkout()
 
-        self.assert_true(checkout.is_checkout_complete())
+        assert checkout.is_checkout_complete()
         print("✅ Checkout finished with Pony Express badge! 🎯")
 
-    def test_checkout_cancel_and_return(self):
+    def test_checkout_cancel_and_return(self, page: Page):
         print("🔁 Starting: test_checkout_cancel_and_return")
-        login = LoginPage(self)
-        cart = CartPage(self)
-        checkout = CheckoutPage(self)
+        login = LoginPage(page)
+        cart = CartPage(page)
+        checkout = CheckoutPage(page)
 
         login.login_with_valid_credentials()
         print("🧃 Adding 1 item to cart...")
@@ -98,5 +98,5 @@ class CheckoutTests(BaseCase):
         print("❌ Cancelling checkout and returning to inventory...")
         checkout.cancel_checkout()
 
-        self.assert_element("div.inventory_item")
+        expect(page.locator("div.inventory_item")).to_be_visible()
         print("✅ Returned to inventory successfully! 🔄")

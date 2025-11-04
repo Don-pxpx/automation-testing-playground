@@ -1,6 +1,6 @@
 import random
 
-from seleniumbase import BaseCase
+from playwright.sync_api import Page
 
 from pages.blazedemo_pages.home_page import HomePage as HomePage
 from pages.blazedemo_pages.flight_selection_page import FlightSelectionPage
@@ -8,14 +8,14 @@ from pages.blazedemo_pages.purchase_page import PurchasePage
 from pages.blazedemo_pages.confirmation_page import ConfirmationPage
 from config import credentials  # Assume you have default card type etc. here
 
-class BookingFlowTests(BaseCase):
-    def test_complete_booking_flow(self):
+class TestBookingFlow:
+    def test_complete_booking_flow(self, page: Page):
         print("\n🚀 Starting: test_complete_booking_flow")
 
-        home = HomePage(self)
-        flight = FlightSelectionPage(self)
-        purchase = PurchasePage(self)
-        confirm = ConfirmationPage(self)
+        home = HomePage(page)
+        flight = FlightSelectionPage(page)
+        purchase = PurchasePage(page)
+        confirm = ConfirmationPage(page)
 
         # Step 1: Visit Homepage and Select Cities
         home.open_homepage()
@@ -55,4 +55,3 @@ class BookingFlowTests(BaseCase):
         # Step 5: Confirmation page assertion
         assert confirm.is_confirmation_successful()
         print("✅ Booking completed and confirmed!")
-

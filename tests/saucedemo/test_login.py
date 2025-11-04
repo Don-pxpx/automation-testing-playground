@@ -1,37 +1,37 @@
-from seleniumbase import BaseCase
+from playwright.sync_api import Page, expect
 from pages.saucedemo_pages.login_page import LoginPage
 from config.credentials import TestData
 
-class SauceDemoLoginTests(BaseCase):
+class TestSauceDemoLogin:
 
-    def test_valid_login(self):
+    def test_valid_login(self, page: Page):
         print("🟡 Starting: test_valid_login")
-        login = LoginPage(self)
+        login = LoginPage(page)
         login.login_with_valid_credentials()
-        self.assert_element(".inventory_list")
+        expect(page.locator(".inventory_list")).to_be_visible()
         print("✅ Login successful! 🎉")
 
-    def test_invalid_login(self):
+    def test_invalid_login(self, page: Page):
         print("🟡 Starting: test_invalid_login")
-        self.open(TestData.BASE_URL)
-        self.type("#user-name", "wrong_user")
-        self.type("#password", "wrong_pass")
-        self.click("#login-button")
-        self.assert_element("h3[data-test='error']")
+        page.goto(TestData.BASE_URL)
+        page.fill("#user-name", "wrong_user")
+        page.fill("#password", "wrong_pass")
+        page.click("#login-button")
+        expect(page.locator("h3[data-test='error']")).to_be_visible()
         print("❌ Login failed as expected! 🔐")
 
-    def test_login_empty_username(self):
+    def test_login_empty_username(self, page: Page):
         print("🚫 Starting: test_login_empty_username")
-        self.open(TestData.BASE_URL)
-        self.type("#password", TestData.VALID_PASSWORD)
-        self.click("#login-button")
-        self.assert_element("h3[data-test='error']")
+        page.goto(TestData.BASE_URL)
+        page.fill("#password", TestData.VALID_PASSWORD)
+        page.click("#login-button")
+        expect(page.locator("h3[data-test='error']")).to_be_visible()
         print("❗ Error message displayed for missing username")
 
-    def test_login_empty_password(self):
+    def test_login_empty_password(self, page: Page):
         print("🚫 Starting: test_login_empty_password")
-        self.open(TestData.BASE_URL)
-        self.type("#user-name", TestData.VALID_USER)
-        self.click("#login-button")
-        self.assert_element("h3[data-test='error']")
+        page.goto(TestData.BASE_URL)
+        page.fill("#user-name", TestData.VALID_USER)
+        page.click("#login-button")
+        expect(page.locator("h3[data-test='error']")).to_be_visible()
         print("❗ Error message displayed for missing password")

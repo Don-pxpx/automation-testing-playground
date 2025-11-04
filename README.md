@@ -28,14 +28,34 @@ but:
 
 ---
 
-🌱 **What I’m currently building:**
+🌱 **What I'm currently building:**
 
 - [`automation-testing-playground`](https://github.com/Don-pxpx/automation-testing-playground)  
   My structured test lab: login, cart logic, flexible checkout flows, test cleanup.  
-  Built with reusable components, data-layer flexibility, and emoji-powered reporting.
+  Built with **Playwright** and pytest, featuring reusable Page Object Model components, data-layer flexibility, and emoji-powered reporting.
 
 - `Bots-sandbox` *(private)*  
   Where I explore AI/LLM-powered testing agents and smart automation tools.
+
+---
+
+## 🎯 Recent Updates
+
+### Migration from SeleniumBase to Playwright ✅
+
+I've successfully migrated the entire test suite from **SeleniumBase** to **Playwright** to leverage:
+- ⚡ **Faster execution** - Playwright's architecture delivers significantly better performance
+- 🎯 **Better reliability** - Built-in auto-waiting and retry mechanisms reduce flakiness
+- 🔧 **Modern API** - Cleaner, more intuitive syntax for element interactions
+- 🌐 **Cross-browser support** - Easy testing across Chromium, Firefox, and WebKit
+
+**What changed:**
+- Refactored all Page Object Models to use Playwright's `page` fixture
+- Converted all test files from SeleniumBase's `BaseCase` to Playwright's pytest integration
+- Updated CI/CD pipeline to install Playwright browsers
+- All tests verified and passing ✅
+
+This migration demonstrates my commitment to staying current with testing best practices and continuously improving test infrastructure.
 
 ---
 
