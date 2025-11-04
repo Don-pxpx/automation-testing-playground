@@ -1,0 +1,20 @@
+tests/OrangeHRM/test_orangehrm_login.py::OrangeHRMLoginTests::test_login_valid_and_invalid
+--------------------------------------------------------------------
+Last Page: https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index
+ Duration: 7.29s
+  Browser: Chrome 139.0.7258.128
+   Driver: chromedriver 139.0.7258.138
+Timestamp: 1755685902  (Unix Timestamp)
+     Date: Wednesday, 20 August 2025
+     Time: 12:31:42 PM  (South Africa Standard Time, UTC+02:00)
+--------------------------------------------------------------------
+Traceback:
+  File "C:\Users\SLethuli\PycharmProjects\automation-testing-playground\tests\OrangeHRM\test_orangehrm_login.py", line 21, in test_login_valid_and_invalid
+    self.assert_true(login.is_logged_in())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\SLethuli\PycharmProjects\automation-testing-playground\.venv\Lib\site-packages\seleniumbase\fixtures\base_case.py", line 7823, in assert_true
+    self.assertTrue(expr, msg=msg)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\SLethuli\AppData\Local\Programs\Python\Python313\Lib\unittest\case.py", line 744, in assertTrue
+    raise self.failureException(msg)
+Exception: False is not true
