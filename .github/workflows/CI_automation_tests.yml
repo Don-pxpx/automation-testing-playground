@@ -7,6 +7,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  PYTHON_VERSION: '3.10'
+
 jobs:
   sanity-tests:
     name: 🧪 Sanity Tests
@@ -20,23 +23,53 @@ jobs:
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: 📦 Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip list | grep -E "(playwright|pytest)" || (echo "Critical dependencies missing!" && exit 1)
+
+    - name: 🎭 Cache Playwright Browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
 
     - name: 🎭 Install Playwright Browsers
       run: |
-        playwright install chromium
-        playwright install-deps chromium
+        playwright install chromium --with-deps
+        playwright --version || (echo "Playwright installation failed!" && exit 1)
+
+    - name: 🔍 Verify Test Files Exist
+      run: |
+        if [ ! -f "tests/saucedemo/test_login.py" ]; then
+          echo "Error: Test file not found!"
+          exit 1
+        fi
+        echo "Test files verified ✓"
 
     - name: 🧪 Run Sanity Tests
       run: |
         echo "Running sanity tests..."
         mkdir -p Artifacts/Reports
-        pytest tests/saucedemo/test_login.py -v --html=Artifacts/Reports/sanity_report.html --self-contained-html
+        pytest tests/saucedemo/test_login.py -v \
+          --html=Artifacts/Reports/sanity_report.html \
+          --self-contained-html \
+          --tb=short
+      continue-on-error: false
 
     - name: 📤 Upload Sanity Test Report
       if: always()
@@ -45,11 +78,16 @@ jobs:
         name: Sanity-Test-Report
         path: Artifacts/Reports/sanity_report.html
         if-no-files-found: ignore
+        retention-days: 7
 
     - name: 📊 Sanity Test Summary
       if: always()
       run: |
-        echo "✅ Sanity tests completed"
+        if [ -f "Artifacts/Reports/sanity_report.html" ]; then
+          echo "✅ Sanity test report generated"
+        else
+          echo "⚠️ Warning: Test report not found"
+        fi
 
   regression-tests:
     name: 🔄 Regression Tests
@@ -63,23 +101,55 @@ jobs:
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: 📦 Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip list | grep -E "(playwright|pytest)" || (echo "Critical dependencies missing!" && exit 1)
+
+    - name: 🎭 Cache Playwright Browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
 
     - name: 🎭 Install Playwright Browsers
       run: |
-        playwright install chromium
-        playwright install-deps chromium
+        playwright install chromium --with-deps
+        playwright --version || (echo "Playwright installation failed!" && exit 1)
+
+    - name: 🔍 Verify Test Files Exist
+      run: |
+        test_count=$(find tests/saucedemo -name "test_*.py" | wc -l)
+        if [ "$test_count" -eq 0 ]; then
+          echo "Error: No test files found in tests/saucedemo/"
+          exit 1
+        fi
+        echo "Found $test_count test file(s) in tests/saucedemo/ ✓"
 
     - name: 🔄 Run Regression Tests
       run: |
         echo "Running regression tests..."
         mkdir -p Artifacts/Reports
-        pytest tests/ -v --html=Artifacts/Reports/regression_report.html --self-contained-html
+        pytest tests/saucedemo/ -v \
+          --html=Artifacts/Reports/regression_report.html \
+          --self-contained-html \
+          --tb=short \
+          --maxfail=5
+      continue-on-error: false
 
     - name: 📤 Upload Regression Test Report
       if: always()
@@ -88,11 +158,16 @@ jobs:
         name: Regression-Test-Report
         path: Artifacts/Reports/regression_report.html
         if-no-files-found: ignore
+        retention-days: 7
 
     - name: 📊 Regression Test Summary
       if: always()
       run: |
-        echo "✅ Regression tests completed"
+        if [ -f "Artifacts/Reports/regression_report.html" ]; then
+          echo "✅ Regression test report generated"
+        else
+          echo "⚠️ Warning: Test report not found"
+        fi
 
   code-quality:
     name: 📝 Code Quality Checks
@@ -105,23 +180,61 @@ jobs:
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: 📦 Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-linters
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: 📦 Install Linters
       run: |
+        python -m pip install --upgrade pip
         pip install flake8 pylint
+        pip list | grep -E "(flake8|pylint)" || (echo "Linters not installed!" && exit 1)
 
-    - name: 🔍 Run Flake8
+    - name: 🔍 Verify Code Files Exist
       run: |
-        flake8 pages/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics || true
-        flake8 pages/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
+        if [ ! -d "pages" ] || [ ! -d "tests" ]; then
+          echo "Error: Code directories not found!"
+          exit 1
+        fi
+        echo "Code directories verified ✓"
+
+    - name: 🔍 Run Flake8 (Critical Errors)
+      run: |
+        echo "Running Flake8 critical error checks..."
+        flake8 pages/ tests/ \
+          --count \
+          --select=E9,F63,F7,F82 \
+          --show-source \
+          --statistics
+
+    - name: 🔍 Run Flake8 (Style Checks)
+      run: |
+        echo "Running Flake8 style checks..."
+        flake8 pages/ tests/ \
+          --count \
+          --exit-zero \
+          --max-complexity=10 \
+          --max-line-length=127 \
+          --statistics
 
     - name: 🔍 Run Pylint
       run: |
-        pylint pages/*.py tests/**/*.py --disable=all --enable=E,F || true
+        echo "Running Pylint..."
+        pylint pages/*.py tests/**/*.py \
+          --disable=all \
+          --enable=E,F \
+          --exit-zero
 
     - name: ✅ Code Quality Summary
       if: always()
       run: |
         echo "✅ Code quality checks completed"
+        echo "All linting checks passed ✓"
 
