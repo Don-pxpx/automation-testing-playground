@@ -9,6 +9,7 @@ on:
 
 env:
   PYTHON_VERSION: '3.10'
+  PYTHONUNBUFFERED: '1'
 
 jobs:
   sanity-tests:
@@ -26,25 +27,18 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
 
-    - name: 📦 Cache pip dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
     - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip list | grep -E "(playwright|pytest)" || (echo "Critical dependencies missing!" && exit 1)
+        pip list | grep -E "(playwright|pytest|pytest-playwright)" || (echo "Critical dependencies missing!" && exit 1)
+        python -c "import pytest_playwright; print(f'pytest-playwright version: {pytest_playwright.__version__}')" || (echo "pytest-playwright not properly installed!" && exit 1)
 
     - name: 🎭 Cache Playwright Browsers
       uses: actions/cache@v4
       with:
         path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
         restore-keys: |
           ${{ runner.os }}-playwright-
 
@@ -53,13 +47,18 @@ jobs:
         playwright install chromium --with-deps
         playwright --version || (echo "Playwright installation failed!" && exit 1)
 
-    - name: 🔍 Verify Test Files Exist
+    - name: 🔍 Verify Test Configuration
       run: |
+        if [ ! -f "pytest.ini" ]; then
+          echo "Error: pytest.ini not found!"
+          exit 1
+        fi
         if [ ! -f "tests/saucedemo/test_login.py" ]; then
           echo "Error: Test file not found!"
           exit 1
         fi
-        echo "Test files verified ✓"
+        pytest --collect-only tests/saucedemo/test_login.py -q || (echo "Test collection failed!" && exit 1)
+        echo "Test configuration verified ✓"
 
     - name: 🧪 Run Sanity Tests
       run: |
@@ -68,7 +67,10 @@ jobs:
         pytest tests/saucedemo/test_login.py -v \
           --html=Artifacts/Reports/sanity_report.html \
           --self-contained-html \
-          --tb=short
+          --tb=short \
+          --timeout=30 \
+          --maxfail=1 \
+          --strict-markers
       continue-on-error: false
 
     - name: 📤 Upload Sanity Test Report
@@ -104,25 +106,18 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
 
-    - name: 📦 Cache pip dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
     - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip list | grep -E "(playwright|pytest)" || (echo "Critical dependencies missing!" && exit 1)
+        pip list | grep -E "(playwright|pytest|pytest-playwright)" || (echo "Critical dependencies missing!" && exit 1)
+        python -c "import pytest_playwright; print(f'pytest-playwright version: {pytest_playwright.__version__}')" || (echo "pytest-playwright not properly installed!" && exit 1)
 
     - name: 🎭 Cache Playwright Browsers
       uses: actions/cache@v4
       with:
         path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
         restore-keys: |
           ${{ runner.os }}-playwright-
 
@@ -131,14 +126,19 @@ jobs:
         playwright install chromium --with-deps
         playwright --version || (echo "Playwright installation failed!" && exit 1)
 
-    - name: 🔍 Verify Test Files Exist
+    - name: 🔍 Verify Test Configuration
       run: |
+        if [ ! -f "pytest.ini" ]; then
+          echo "Error: pytest.ini not found!"
+          exit 1
+        fi
         test_count=$(find tests/saucedemo -name "test_*.py" | wc -l)
         if [ "$test_count" -eq 0 ]; then
           echo "Error: No test files found in tests/saucedemo/"
           exit 1
         fi
-        echo "Found $test_count test file(s) in tests/saucedemo/ ✓"
+        pytest --collect-only tests/saucedemo/ -q || (echo "Test collection failed!" && exit 1)
+        echo "Found $test_count test file(s) ✓"
 
     - name: 🔄 Run Regression Tests
       run: |
@@ -148,7 +148,9 @@ jobs:
           --html=Artifacts/Reports/regression_report.html \
           --self-contained-html \
           --tb=short \
-          --maxfail=5
+          --timeout=30 \
+          --maxfail=5 \
+          --strict-markers
       continue-on-error: false
 
     - name: 📤 Upload Regression Test Report
@@ -182,14 +184,6 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
-
-    - name: 📦 Cache pip dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-linters
-        restore-keys: |
-          ${{ runner.os }}-pip-
 
     - name: 📦 Install Linters
       run: |
