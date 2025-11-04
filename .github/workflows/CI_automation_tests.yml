@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+  schedule:
+    # Run daily at 2:00 AM SAST (00:00 UTC)
+    - cron: '0 0 * * *'
 
 env:
   PYTHON_VERSION: '3.10'
@@ -231,4 +234,36 @@ jobs:
       run: |
         echo "✅ Code quality checks completed"
         echo "All linting checks passed ✓"
+
+  notify-on-failure:
+    name: 📧 Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [sanity-tests, regression-tests, code-quality]
+    if: failure()
+    
+    steps:
+    - name: 📧 Send Failure Notification
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "❌ CI Workflow Failed - automation-testing-playground"
+        to: ${{ secrets.EMAIL_TO }}
+        from: ${{ secrets.EMAIL_USERNAME }}
+        body: |
+          The CI workflow for automation-testing-playground has failed.
+          
+          Repository: ${{ github.repository }}
+          Workflow: ${{ github.workflow }}
+          Run: ${{ github.run_id }}
+          Commit: ${{ github.sha }}
+          Author: ${{ github.actor }}
+          
+          View the workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          
+          Please check the workflow logs for details.
+        secure: true
+      continue-on-error: true
 
