@@ -123,7 +123,7 @@ def test_checkout_cancel_and_return(page: Page):
     checkout.fill_checkout_form(first, last, zip_code)
     checkout.cancel_checkout()
 
-    expect(page.locator("div.inventory_item")).to_be_visible()
+    expect(page.locator("div.inventory_item").first).to_be_visible()
     logger.success("✅ Successfully returned to inventory page 🏠")
 
     logger.summary(passed=1, failed=0, skipped=0)

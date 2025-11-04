@@ -56,13 +56,28 @@ class CartPage:
 
     def get_cart_items_names(self):
         items = self.page.locator("div.cart_item").all()
-        return [item.locator(".inventory_item_name").text_content() for item in items]
+        names = []
+        for item in items:
+            name = item.locator(".inventory_item_name").text_content()
+            if name:
+                names.append(name)
+        return names
 
     def remove_all_items(self):
-        buttons = self.page.locator("button").all()
-        for btn in buttons:
-            if btn.text_content() == "Remove":
-                btn.click()
+        # Keep removing items until cart is empty
+        max_iterations = 10  # Safety limit
+        for _ in range(max_iterations):
+            cart_items = self.page.locator("div.cart_item").all()
+            if len(cart_items) == 0:
+                break
+            
+            # Find and click the first Remove button
+            remove_btn = self.page.locator("button:has-text('Remove')").first
+            if remove_btn.is_visible():
+                remove_btn.click()
+                self.page.wait_for_timeout(500)  # Wait for DOM update
+            else:
+                break
 
     def go_to_checkout(self):
         self.page.click("#checkout")

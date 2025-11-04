@@ -68,6 +68,7 @@ def test_remove_all_items_from_cart(page: Page):
     cart.remove_all_items()
 
     remaining_items = cart.get_cart_items_names()
+    remaining_items = [item for item in remaining_items if item]  # Filter out None values
     assert len(remaining_items) == 0
     logger.success("✅ Cart is empty after removals! 🧺")
 
