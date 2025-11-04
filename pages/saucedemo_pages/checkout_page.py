@@ -1,28 +1,28 @@
 # pages/checkout_page.py
 
-from selenium.webdriver.common.by import By
+from playwright.sync_api import expect
 
 class CheckoutPage:
-    def __init__(self, base):
-        self.base = base  # Inherited from BaseCase
+    def __init__(self, page):
+        self.page = page  # Playwright page object
 
     def go_to_checkout(self):
-        self.base.click("#checkout")
+        self.page.click("#checkout")
 
     def fill_checkout_form(self, first, last, zip_code):
-        self.base.type("#first-name", first)
-        self.base.type("#last-name", last)
-        self.base.type("#postal-code", zip_code)
-        self.base.click("#continue")
+        self.page.fill("#first-name", first)
+        self.page.fill("#last-name", last)
+        self.page.fill("#postal-code", zip_code)
+        self.page.click("#continue")
 
     def complete_checkout(self):
-        self.base.click("#finish")
+        self.page.click("#finish")
 
     def cancel_checkout(self):
-        self.base.click("#cancel")
+        self.page.click("#cancel")
 
     def is_checkout_complete(self):
-        return self.base.is_element_visible("img[alt='Pony Express']")
+        return self.page.locator("img[alt='Pony Express']").is_visible()
 
     def get_error_text(self):
-        return self.base.get_text("h3[data-test='error']")
+        return self.page.locator("h3[data-test='error']").text_content() or ""

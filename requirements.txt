@@ -44,7 +44,8 @@ rich==13.7.0
 prettytable==3.9.0
 
 # Web Scraping & Browser Automation
-selenium==4.15.2
+playwright==1.48.0
+pytest-playwright==0.4.4
 beautifulsoup4==4.12.2
 lxml==4.9.3
 
