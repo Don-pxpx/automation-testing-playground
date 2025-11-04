@@ -1,68 +1,62 @@
-from seleniumbase import BaseCase
-
+from playwright.sync_api import Page, expect
 from config.credentials import TestData
 from helpers.log_helpers import InlineLogger
 from pages.saucedemo_pages.login_page import LoginPage
 
+def test_locked_out_user_shows_error(page: Page):
+    logger = InlineLogger()
+    logger.step("Starting Test: Locked-out user cannot login 🚫")
 
-class SauceDemoLoginEdgeCases(BaseCase):
+    page.goto(TestData.BASE_URL)
+    page.fill("#user-name", "locked_out_user")
+    page.fill("#password", TestData.VALID_PASSWORD)
+    page.click("#login-button")
 
-    def test_locked_out_user_shows_error(self):
-        logger = InlineLogger()
-        logger.step("Starting Test: Locked-out user cannot login 🚫")
+    expect(page.locator("h3[data-test='error']")).to_be_visible()
+    expect(page.locator("h3[data-test='error']")).to_contain_text("locked out", timeout=5000)
+    logger.error("Locked-out message displayed as expected")
 
-        self.open(TestData.BASE_URL)
-        self.type("#user-name", "locked_out_user")
-        self.type("#password", TestData.VALID_PASSWORD)
-        self.click("#login-button")
+    logger.summary(passed=1, failed=0, skipped=0)
 
-        self.assert_element("h3[data-test='error']")
-        self.assert_text("locked out", "h3[data-test='error']", timeout=5)
-        logger.error("Locked-out message displayed as expected")
+def test_empty_username_shows_error(page: Page):
+    logger = InlineLogger()
+    logger.step("Starting Test: Empty username shows error ❗")
 
-        logger.summary(passed=1, failed=0, skipped=0)
+    page.goto(TestData.BASE_URL)
+    page.fill("#password", TestData.VALID_PASSWORD)
+    page.click("#login-button")
 
-    def test_empty_username_shows_error(self):
-        logger = InlineLogger()
-        logger.step("Starting Test: Empty username shows error ❗")
+    expect(page.locator("h3[data-test='error']")).to_be_visible()
+    expect(page.locator("h3[data-test='error']")).to_contain_text("Username is required", timeout=5000)
+    logger.error("Username required error displayed")
 
-        self.open(TestData.BASE_URL)
-        self.type("#password", TestData.VALID_PASSWORD)
-        self.click("#login-button")
+    logger.summary(passed=1, failed=0, skipped=0)
 
-        self.assert_element("h3[data-test='error']")
-        self.assert_text("Username is required", "h3[data-test='error']", timeout=5)
-        logger.error("Username required error displayed")
+def test_empty_password_shows_error(page: Page):
+    logger = InlineLogger()
+    logger.step("Starting Test: Empty password shows error ❗")
 
-        logger.summary(passed=1, failed=0, skipped=0)
+    page.goto(TestData.BASE_URL)
+    page.fill("#user-name", TestData.VALID_USER)
+    page.click("#login-button")
 
-    def test_empty_password_shows_error(self):
-        logger = InlineLogger()
-        logger.step("Starting Test: Empty password shows error ❗")
+    expect(page.locator("h3[data-test='error']")).to_be_visible()
+    expect(page.locator("h3[data-test='error']")).to_contain_text("Password is required", timeout=5000)
+    logger.error("Password required error displayed")
 
-        self.open(TestData.BASE_URL)
-        self.type("#user-name", TestData.VALID_USER)
-        self.click("#login-button")
+    logger.summary(passed=1, failed=0, skipped=0)
 
-        self.assert_element("h3[data-test='error']")
-        self.assert_text("Password is required", "h3[data-test='error']", timeout=5)
-        logger.error("Password required error displayed")
+def test_wrong_credentials_show_error(page: Page):
+    logger = InlineLogger()
+    logger.step("Starting Test: Wrong credentials show error 🔐❌")
 
-        logger.summary(passed=1, failed=0, skipped=0)
+    page.goto(TestData.BASE_URL)
+    page.fill("#user-name", TestData.VALID_USER)
+    page.fill("#password", TestData.INVALID_PASSWORD)
+    page.click("#login-button")
 
-    def test_wrong_credentials_show_error(self):
-        logger = InlineLogger()
-        logger.step("Starting Test: Wrong credentials show error 🔐❌")
+    expect(page.locator("h3[data-test='error']")).to_be_visible()
+    expect(page.locator("h3[data-test='error']")).to_contain_text("Username and password do not match", timeout=5000)
+    logger.error("Mismatch credentials error displayed")
 
-        self.open(TestData.BASE_URL)
-        self.type("#user-name", TestData.VALID_USER)
-        self.type("#password", TestData.INVALID_PASSWORD)
-        self.click("#login-button")
-
-        self.assert_element("h3[data-test='error']")
-        self.assert_text("Username and password do not match", "h3[data-test='error']", timeout=5)
-        logger.error("Mismatch credentials error displayed")
-
-        logger.summary(passed=1, failed=0, skipped=0)
-
-
+    logger.summary(passed=1, failed=0, skipped=0)
