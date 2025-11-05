@@ -8,6 +8,8 @@
 
 It's where I sharpen my automation skills and prototype clean, intelligent, and maintainable test strategies — not just scripts that "pass."
 
+**Personal experimentation playground** for exploring functional testing, AI-assisted test automation, and upskilling myself by learning how to use AI to run manual and automated tests for **functional**, **penetration**, and **performance** testing.
+
 I treat testing like engineering. My questions aren't just:
 > "Does it work?"  
 but:  
@@ -15,6 +17,7 @@ but:
 - 🔁 *Can it scale and repeat reliably?*  
 - 🚨 *How early can I detect failures — and why?*  
 - 🔮 *Can I design for change, not just for now?*
+- 🤖 *How can AI assist in test generation and execution?*
 
 ---
 
@@ -180,6 +183,7 @@ Workflows run automatically on:
 - Expanding test coverage for OrangeHRM
 - Adding more API endpoint tests
 - Improving test reliability and flakiness reduction
+- Exploring AI-assisted functional testing workflows
 
 ### 📋 Planned
 
@@ -188,6 +192,8 @@ Workflows run automatically on:
 - Advanced security validation tests
 - Cross-browser testing expansion
 - Mobile testing capabilities
+- **Performance Testing** - Load testing, stress testing, performance monitoring (Not Started)
+- **Penetration Testing** - Security testing integration (Not Started)
 
 ---
 
