@@ -137,6 +137,60 @@ Workflows run automatically on:
 
 ---
 
+## 📈 Progress & Milestones
+
+### ✅ Completed
+
+- **Migration to Playwright** (Latest)
+  - Successfully migrated entire test suite from SeleniumBase to Playwright
+  - Refactored all Page Object Models to use Playwright's `page` fixture
+  - Updated CI/CD pipeline for Playwright browsers
+  - All tests verified and passing ✅
+
+- **Test Framework Architecture**
+  - Built maintainable test framework with modular Page Object Models
+  - Implemented reusable components for SauceDemo and BlazeDemo
+  - Created data-driven test patterns
+  - Established coding standards and best practices
+
+- **Test Coverage**
+  - SauceDemo: Login, cart operations, cart removal, checkout flow
+  - BlazeDemo: Flight booking flow, flight selection, purchase confirmation
+  - OrangeHRM: Employee management, login, job titles, employee search
+
+- **CI/CD Pipeline**
+  - Automated sanity tests for critical paths
+  - Regression test suite execution
+  - Code quality checks and linting
+  - Automated workflows on push, PR, and manual triggers
+
+- **Reporting & Visualization**
+  - Emoji-powered test reports
+  - HTML test reports with rich formatting
+  - Dashboard for test results visualization
+
+- **Additional Features**
+  - API testing with JSONPlaceholder
+  - Performance testing with Locust
+  - Security vulnerability scanning
+  - Form validation testing
+
+### 🔄 In Progress
+
+- Expanding test coverage for OrangeHRM
+- Adding more API endpoint tests
+- Improving test reliability and flakiness reduction
+
+### 📋 Planned
+
+- AI-assisted testing agents exploration
+- Self-healing test capabilities
+- Advanced security validation tests
+- Cross-browser testing expansion
+- Mobile testing capabilities
+
+---
+
 ⚙️ **Why I build this way**
 
 Because test automation should help you test faster — but also make it fun, challenging, and meaningful.
