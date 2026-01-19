@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, SkipForward, TestTube, TrendingUp, Clock } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { CheckCircle, XCircle, SkipForward, TestTube, TrendingUp, Clock, ArrowRight } from 'lucide-react'
 
 const iconMap = {
   total: TestTube,
@@ -21,17 +22,37 @@ const colorMap = {
   lastRun: 'from-cyan-500/20 to-cyan-600/20 border-cyan-500/30',
 }
 
-const StatCard = ({ title, value, icon, color, animationDelay = 0 }) => {
+const StatCard = ({ title, value, icon, color, animationDelay = 0, onClick }) => {
+  const navigate = useNavigate()
   const IconComponent = iconMap[icon] || TestTube
   const colorClass = colorMap[color] || colorMap.total
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick()
+    } else {
+      // Default behavior: navigate to results with filter
+      const statusMap = {
+        'Total Tests': 'ALL',
+        'Passed': 'PASSED',
+        'Failed': 'FAILED',
+        'Skipped': 'SKIPPED',
+        'Pass Rate': 'ALL',
+      }
+      const status = statusMap[title] || 'ALL'
+      navigate(`/results?status=${status}`)
+    }
+  }
+
   return (
     <motion.div
-      className={`relative p-6 rounded-2xl shadow-xl backdrop-blur-md border ${colorClass} overflow-hidden`}
+      className={`relative p-6 rounded-2xl shadow-xl backdrop-blur-md border ${colorClass} overflow-hidden cursor-pointer group`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: animationDelay, duration: 0.5 }}
       whileHover={{ scale: 1.03, boxShadow: "0 10px 20px rgba(0,0,0,0.2)" }}
+      whileTap={{ scale: 0.98 }}
+      onClick={handleClick}
     >
       <motion.div
         className="absolute -top-4 -right-4 text-6xl opacity-10"
@@ -47,10 +68,21 @@ const StatCard = ({ title, value, icon, color, animationDelay = 0 }) => {
       >
         <IconComponent size={64} />
       </motion.div>
-      <h3 className="text-lg font-semibold text-gray-200 mb-2">{title}</h3>
-      <p className="text-4xl font-bold text-white">
-        {value}
-      </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-200 mb-2">{title}</h3>
+          <p className="text-4xl font-bold text-white">
+            {value}
+          </p>
+        </div>
+        <motion.div
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+          animate={{ x: [0, 5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <ArrowRight className="w-6 h-6 text-white/60" />
+        </motion.div>
+      </div>
     </motion.div>
   )
 }

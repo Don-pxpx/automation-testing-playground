@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Clock, CheckCircle, XCircle, Zap } from 'lucide-react'
+import { Clock, CheckCircle, XCircle, Zap, Eye, RefreshCw, Download } from 'lucide-react'
 import { getTestHistory } from '../utils/api'
 
 export default function TestHistory() {
@@ -20,6 +20,21 @@ export default function TestHistory() {
       console.error('Failed to load history:', error)
       setLoading(false)
     }
+  }
+
+  const handleViewDetails = (run) => {
+    alert(`Viewing details for: ${run.suite || 'Test Run'}\n\nPassed: ${run.passed || 0}\nFailed: ${run.failed || 0}\nSkipped: ${run.skipped || 0}\n\nIn a real implementation, this would show detailed test results.`)
+  }
+
+  const handleRerunSuite = (run) => {
+    const suiteName = run.suite || 'Test Run'
+    if (confirm(`Rerun test suite: ${suiteName}?`)) {
+      alert(`Rerunning ${suiteName}...\n\nThis would trigger a test execution in a real implementation.`)
+    }
+  }
+
+  const handleDownloadReport = (run) => {
+    alert(`Downloading report for: ${run.suite || 'Test Run'}\n\nThis would download the test report in a real implementation.`)
   }
 
   const statusEmojis = {
@@ -87,7 +102,7 @@ export default function TestHistory() {
               className="glass rounded-xl p-6 card-hover"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-1">
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -95,7 +110,7 @@ export default function TestHistory() {
                   >
                     {statusEmojis[run.status] || '⚡'}
                   </motion.div>
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-xl font-bold mb-1">{run.suite || 'Test Run'}</h3>
                     <p className="text-gray-400 text-sm">
                       🧪 {run.totalTests || 0} tests • ⏱️ {run.duration || 'N/A'}
@@ -105,13 +120,44 @@ export default function TestHistory() {
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className={`font-semibold ${statusColors[run.status]}`}>
-                    {run.status}
-                  </span>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {new Date(run.timestamp || Date.now()).toLocaleString()}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="text-right mr-4">
+                    <span className={`font-semibold ${statusColors[run.status]}`}>
+                      {run.status}
+                    </span>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(run.timestamp || Date.now()).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleViewDetails(run)}
+                      className="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 transition-colors"
+                      title="View Details"
+                    >
+                      <Eye className="w-4 h-4 text-blue-300" />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleRerunSuite(run)}
+                      className="p-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 transition-colors"
+                      title="Rerun Suite"
+                    >
+                      <RefreshCw className="w-4 h-4 text-purple-300" />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleDownloadReport(run)}
+                      className="p-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 transition-colors"
+                      title="Download Report"
+                    >
+                      <Download className="w-4 h-4 text-green-300" />
+                    </motion.button>
+                  </div>
                 </div>
               </div>
             </motion.div>

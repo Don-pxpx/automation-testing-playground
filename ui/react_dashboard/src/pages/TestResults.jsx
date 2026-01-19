@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, Filter } from 'lucide-react'
+import { Search, Filter, Eye, RefreshCw, Copy, Check } from 'lucide-react'
 import { getAllTestResults } from '../utils/api'
 
 export default function TestResults() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [results, setResults] = useState([])
   const [filteredResults, setFilteredResults] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('ALL')
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('test') || '')
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'ALL')
   const [suiteFilter, setSuiteFilter] = useState('ALL')
+  const [copiedId, setCopiedId] = useState(null)
 
   useEffect(() => {
     loadResults()
@@ -17,6 +20,15 @@ export default function TestResults() {
   useEffect(() => {
     filterResults()
   }, [searchTerm, statusFilter, suiteFilter, results])
+
+  useEffect(() => {
+    // Update URL params when filters change
+    const params = new URLSearchParams()
+    if (searchTerm) params.set('test', searchTerm)
+    if (statusFilter !== 'ALL') params.set('status', statusFilter)
+    if (suiteFilter !== 'ALL') params.set('suite', suiteFilter)
+    setSearchParams(params)
+  }, [searchTerm, statusFilter, suiteFilter])
 
   const loadResults = async () => {
     try {
@@ -48,6 +60,29 @@ export default function TestResults() {
     setFilteredResults(filtered)
   }
 
+  const handleCopyTestName = (testName) => {
+    navigator.clipboard.writeText(testName)
+    setCopiedId(testName)
+    setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  const handleRerunTest = (testName) => {
+    // In a real implementation, this would trigger a test run
+    alert(`Rerunning test: ${testName}\n\nThis would trigger a test execution in a real implementation.`)
+  }
+
+  const handleViewDetails = (result) => {
+    // Scroll to result and highlight it
+    const element = document.getElementById(`test-${result.id || result.name}`)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      element.classList.add('ring-4', 'ring-purple-500')
+      setTimeout(() => {
+        element.classList.remove('ring-4', 'ring-purple-500')
+      }, 2000)
+    }
+  }
+
   const statusEmojis = {
     PASSED: '✅',
     FAILED: '❌',
@@ -75,8 +110,8 @@ export default function TestResults() {
       </div>
 
       {/* Search and Filter */}
-      <div className="glass rounded-2xl p-4 flex gap-4">
-        <div className="flex-1 relative">
+      <div className="glass rounded-2xl p-4 flex gap-4 flex-wrap">
+        <div className="flex-1 relative min-w-[200px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
@@ -89,7 +124,7 @@ export default function TestResults() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
         >
           <option value="ALL">All Statuses</option>
           <option value="PASSED">✅ Passed</option>
@@ -99,7 +134,7 @@ export default function TestResults() {
         <select
           value={suiteFilter}
           onChange={(e) => setSuiteFilter(e.target.value)}
-          className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
         >
           <option value="ALL">All Suites</option>
           <option value="SauceDemo">SauceDemo</option>
@@ -107,6 +142,15 @@ export default function TestResults() {
           <option value="OrangeHRM">OrangeHRM</option>
           <option value="API">API</option>
         </select>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={loadResults}
+          className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 rounded-lg flex items-center gap-2 transition-colors"
+        >
+          <RefreshCw className="w-4 h-4" />
+          <span>Refresh</span>
+        </motion.button>
       </div>
 
       {/* Results List */}
@@ -130,11 +174,12 @@ export default function TestResults() {
           filteredResults.map((result, index) => (
             <motion.div
               key={result.id || index}
+              id={`test-${result.id || result.name}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ scale: 1.02, x: 5 }}
-              className={`glass rounded-xl p-6 border-l-4 ${statusColors[result.status] || statusColors.PASSED} card-hover`}
+              className={`glass rounded-xl p-6 border-l-4 ${statusColors[result.status] || statusColors.PASSED} card-hover transition-all`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -157,6 +202,39 @@ export default function TestResults() {
                       <p className="text-red-300 text-sm">{result.error}</p>
                     </div>
                   )}
+                </div>
+                <div className="flex gap-2 ml-4">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleViewDetails(result)}
+                    className="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 transition-colors"
+                    title="View Details"
+                  >
+                    <Eye className="w-4 h-4 text-blue-300" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleCopyTestName(result.name)}
+                    className="p-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 transition-colors"
+                    title="Copy Test Name"
+                  >
+                    {copiedId === result.name ? (
+                      <Check className="w-4 h-4 text-green-300" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-green-300" />
+                    )}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleRerunTest(result.name)}
+                    className="p-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 transition-colors"
+                    title="Rerun Test"
+                  >
+                    <RefreshCw className="w-4 h-4 text-purple-300" />
+                  </motion.button>
                 </div>
               </div>
             </motion.div>

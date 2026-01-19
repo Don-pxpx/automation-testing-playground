@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, SkipForward, ExternalLink } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { CheckCircle, XCircle, SkipForward, ExternalLink, Eye } from 'lucide-react'
 
 const statusEmojis = {
   PASSED: '✅',
@@ -16,6 +17,12 @@ const statusColors = {
 }
 
 export default function RecentTests({ tests = [] }) {
+  const navigate = useNavigate()
+
+  const handleViewDetails = (test) => {
+    navigate(`/results?test=${encodeURIComponent(test.name)}&status=${test.status}`)
+  }
+
   if (tests.length === 0) {
     return (
       <motion.div
@@ -60,8 +67,9 @@ export default function RecentTests({ tests = [] }) {
             className={`
               glass rounded-lg p-4 border-l-4
               ${statusColors[test.status] || statusColors.PASSED}
-              card-hover
+              card-hover cursor-pointer
             `}
+            onClick={() => handleViewDetails(test)}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -82,7 +90,18 @@ export default function RecentTests({ tests = [] }) {
                   <span>📅 {new Date(test.timestamp || Date.now()).toLocaleDateString()}</span>
                 </div>
               </div>
-              <ExternalLink className="w-4 h-4 text-gray-400" />
+              <motion.button
+                whileHover={{ scale: 1.2, rotate: 15 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleViewDetails(test)
+                }}
+                title="View Details"
+              >
+                <Eye className="w-4 h-4 text-gray-300" />
+              </motion.button>
             </div>
           </motion.div>
         ))}

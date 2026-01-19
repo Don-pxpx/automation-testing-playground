@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { RefreshCw } from 'lucide-react'
 import StatCard from '../components/StatCard'
 import RecentTests from '../components/RecentTests'
 import { TestResultsBarChart, TestResultsPieChart } from '../components/TestChart'
@@ -105,9 +106,18 @@ export default function Dashboard() {
         >
           <span className="inline-block animate-bounce">🧪</span> Welcome Back!
         </motion.h1>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-lg mb-4">
           Your automation test results at a glance
         </p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={loadData}
+          className="px-6 py-3 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/50 rounded-lg flex items-center gap-2 transition-colors mx-auto"
+        >
+          <RefreshCw className="w-5 h-5" />
+          <span>Refresh Dashboard</span>
+        </motion.button>
       </motion.div>
 
       {/* Stats Grid */}
