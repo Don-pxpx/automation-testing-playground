@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { RefreshCw } from 'lucide-react'
 import StatCard from '../components/StatCard'
@@ -38,36 +38,67 @@ export default function Dashboard() {
   const [suiteData, setSuiteData] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-    const interval = setInterval(loadData, 5000) // Refresh every 5 seconds
-    return () => clearInterval(interval)
-  }, [])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [statsData, testsData] = await Promise.all([
         getDashboardStats(),
         getRecentTestResults(5)
       ])
-      setStats(statsData)
-      setRecentTests(testsData)
       
-      // Generate suite data for charts
+      // Validate and set stats data
+      if (statsData && typeof statsData === 'object') {
+        setStats({
+          totalTests: statsData.totalTests || 0,
+          passed: statsData.passed || 0,
+          failed: statsData.failed || 0,
+          skipped: statsData.skipped || 0,
+          passRate: statsData.passRate || 0,
+          totalSuites: statsData.totalSuites || 0,
+        })
+      }
+      
+      // Validate and set recent tests
+      if (Array.isArray(testsData)) {
+        setRecentTests(testsData)
+      } else {
+        setRecentTests([])
+      }
+      
+      // Generate suite data for charts based on actual stats
       const suites = ['SauceDemo', 'BlazeDemo', 'OrangeHRM', 'API']
-      setSuiteData(suites.map(suite => ({
+      const totalPassed = statsData?.passed || 35
+      const totalFailed = statsData?.failed || 5
+      const totalSkipped = statsData?.skipped || 2
+      
+      setSuiteData(suites.map((suite, index) => ({
         suite,
-        passed: Math.floor(Math.random() * 20) + 10,
-        failed: Math.floor(Math.random() * 5),
-        skipped: Math.floor(Math.random() * 3),
+        passed: Math.floor(totalPassed / suites.length) + (index === 0 ? totalPassed % suites.length : 0),
+        failed: Math.floor(totalFailed / suites.length) + (index === 0 ? totalFailed % suites.length : 0),
+        skipped: Math.floor(totalSkipped / suites.length) + (index === 0 ? totalSkipped % suites.length : 0),
       })))
       
       setLoading(false)
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
+      // Set default values on error
+      setStats({
+        totalTests: 0,
+        passed: 0,
+        failed: 0,
+        skipped: 0,
+        passRate: 0,
+        totalSuites: 0,
+      })
+      setRecentTests([])
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadData()
+    const interval = setInterval(loadData, 5000) // Refresh every 5 seconds
+    return () => clearInterval(interval)
+  }, [loadData])
 
   if (loading) {
     return (

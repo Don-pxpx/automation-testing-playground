@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Clock, CheckCircle, XCircle, Zap, Eye, RefreshCw, Download } from 'lucide-react'
 import { getTestHistory } from '../utils/api'
@@ -7,20 +7,27 @@ export default function TestHistory() {
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadHistory()
-  }, [])
-
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     try {
       const data = await getTestHistory()
-      setHistory(data)
+      // Validate data is an array
+      if (Array.isArray(data)) {
+        setHistory(data)
+      } else {
+        console.warn('API returned non-array data:', data)
+        setHistory([])
+      }
       setLoading(false)
     } catch (error) {
       console.error('Failed to load history:', error)
+      setHistory([]) // Set empty array on error
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadHistory()
+  }, [loadHistory])
 
   const handleViewDetails = (run) => {
     alert(`Viewing details for: ${run.suite || 'Test Run'}\n\nPassed: ${run.passed || 0}\nFailed: ${run.failed || 0}\nSkipped: ${run.skipped || 0}\n\nIn a real implementation, this would show detailed test results.`)

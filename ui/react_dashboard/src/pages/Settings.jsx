@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Settings as SettingsIcon, RefreshCw, Bell, Palette, Save, Check } from 'lucide-react'
 
@@ -8,6 +8,7 @@ export default function Settings() {
   const [theme, setTheme] = useState('dark')
   const [apiUrl, setApiUrl] = useState('http://localhost:5001/api')
   const [saved, setSaved] = useState(false)
+  const timeoutRef = useRef(null)
 
   useEffect(() => {
     // Load saved settings from localStorage
@@ -20,6 +21,13 @@ export default function Settings() {
     if (savedNotifications !== null) setNotifications(savedNotifications === 'true')
     if (savedTheme) setTheme(savedTheme)
     if (savedApiUrl) setApiUrl(savedApiUrl)
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
   }, [])
 
   const handleSave = () => {
@@ -28,7 +36,14 @@ export default function Settings() {
     localStorage.setItem('theme', theme)
     localStorage.setItem('apiUrl', apiUrl)
     setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    
+    // Clear existing timeout if any
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    
+    // Set new timeout
+    timeoutRef.current = setTimeout(() => setSaved(false), 2000)
   }
 
   return (
