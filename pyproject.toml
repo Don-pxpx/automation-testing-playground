@@ -46,7 +46,7 @@ extend-exclude = '''
 profile = "black"
 multi_line_output = 3
 line_length = 88
-known_first_party = ["performance", "security", "analytics", "tools"]
+known_first_party = ["automation_testing_playground"]
 
 [tool.ruff]
 line-length = 88
@@ -81,7 +81,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["performance", "security", "analytics", "tools"]
+source = ["src/automation_testing_playground"]
 omit = [
     "*/tests/*",
     "*/test_*",

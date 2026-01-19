@@ -7,10 +7,8 @@ Provides easy access to different testing scenarios
 import argparse
 import sys
 import subprocess
-from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
-# Updated imports for new structure
 from automation_testing_playground.helpers.logger import PerformanceSecurityLogger
 from automation_testing_playground.config.settings import TEST_TARGETS_CONFIG
 
@@ -27,7 +25,7 @@ def run_performance_tests(test_type: str = "all", target: Optional[str] = None):
             logger.step("Running API performance tests")
             result = subprocess.run([
                 sys.executable, "-m", "pytest", 
-                "tests/performance/test_api_performance.py", 
+                "tests/integration/api/test_api_performance.py", 
                 "-v", "-s", "-m", "performance"
             ], capture_output=True, text=True)
         elif test_type == "load":
@@ -49,7 +47,7 @@ def run_performance_tests(test_type: str = "all", target: Optional[str] = None):
             logger.step("Running all performance tests")
             result = subprocess.run([
                 sys.executable, "-m", "pytest", 
-                "tests/performance/", 
+                "tests/integration/", 
                 "-v", "-s", "-m", "performance"
             ], capture_output=True, text=True)
         
