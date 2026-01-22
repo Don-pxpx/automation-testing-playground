@@ -66,16 +66,33 @@ This migration demonstrates my commitment to staying current with testing best p
 
 ```
 automation-testing-playground/
-├── pages/                    # Page Object Models
-│   ├── saucedemo_pages/     # SauceDemo page objects
-│   └── blazedemo_pages/     # BlazeDemo page objects
-├── tests/                    # Test suites
-│   ├── saucedemo/           # SauceDemo tests
-│   └── blazedemo/           # BlazeDemo tests
-├── config/                   # Configuration files
-├── .github/workflows/        # CI/CD workflows
-└── requirements.txt          # Python dependencies
+├── README.md
+├── .gitignore
+├── requirements.txt
+├── pyproject.toml
+├── pytest.ini
+├── src/
+│   └── automation_testing_playground/  # Production code
+│       ├── pages/                      # Page Object Models
+│       ├── helpers/                    # Helper utilities
+│       ├── config/                     # Configuration
+│       ├── performance/                # Performance testing tools
+│       └── security/                   # Security testing tools
+├── tests/                              # Test suites
+│   ├── unit/                          # Unit tests
+│   ├── integration/                   # Integration tests
+│   └── e2e/                           # End-to-end tests
+│       ├── saucedemo/                 # SauceDemo tests
+│       └── blazedemo/                 # BlazeDemo tests
+├── scripts/                            # Utility scripts
+│   └── run_tests.py                   # Test runner CLI
+├── artifacts/                          # Test artifacts
+│   └── reports/                       # HTML test reports
+├── docs/                               # Documentation
+└── .github/workflows/                  # CI/CD workflows
 ```
+
+> **Note:** This repository is currently being refactored to comply with Personal GitHub Repository Rules. See `REFACTORING_STATUS.md` for migration progress. Run `python scripts/migrate_structure.py` to complete the migration.
 
 ---
 
@@ -102,10 +119,13 @@ playwright install chromium
 pytest
 
 # Run specific test suite
-pytest tests/saucedemo/
+pytest tests/e2e/saucedemo/
 
 # Run with HTML report
-pytest --html=Artifacts/Reports/test_report.html --self-contained-html
+pytest --html=artifacts/reports/test_report.html --self-contained-html
+
+# Use the test runner script
+python scripts/run_tests.py targets  # List available targets
 ```
 
 ---
@@ -184,6 +204,7 @@ Workflows run automatically on:
 - Adding more API endpoint tests
 - Improving test reliability and flakiness reduction
 - Exploring AI-assisted functional testing workflows
+- **Repository Structure Refactoring** - Migrating to standard structure (see `REFACTORING_STATUS.md`)
 
 ### 📋 Planned
 
