@@ -8,9 +8,8 @@ This rule applies ONLY when:
 - OR the user says "this is not work" or "personal project"
 
 This rule MUST NOT be applied when:
-- The context involves Jira tickets
-- The work is enterprise, audit, or production-related
-- The user is following work QA / governance protocols
+- The work is production-related or client-facing
+- The user is following formal QA / governance protocols
 
 If scope is unclear:
 - ASK the user to confirm whether this is a personal GitHub repository
@@ -31,9 +30,8 @@ Optimize for:
 - Incremental improvement
 
 Do NOT optimize for:
-- Jira workflows
-- Audit compliance
-- Formal test evidence
+- Formal compliance workflows
+- Formal test evidence requirements
 - Enterprise governance
 
 This rule is guidance-oriented, not compliance-driven.
