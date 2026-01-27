@@ -80,22 +80,24 @@ automation-testing-playground/
 ├── src/
 │   └── automation_testing_playground/
 │       ├── __init__.py
-│       ├── pages/
-│       ├── config/
-│       ├── helpers/
-│       ├── performance/
-│       └── security/
+│       ├── config/           # credentials, api_config, settings, orangeHRM_credentials
+│       ├── helpers/          # log_helpers, logger
+│       ├── models/           # blazedemo_models, orangehrm_models
+│       ├── pages/            # saucedemo_pages, blazedemo_pages, orangeHRM_pages, api
+│       ├── performance/      # load_testing (Locust)
+│       └── security/         # vulnerability_scan
 ├── tests/
 │   ├── unit/
-│   ├── integration/
-│   └── e2e/
+│   ├── integration/          # api (HTTPBin, JSONPlaceholder)
+│   └── e2e/                  # saucedemo, blazedemo, OrangeHRM
+├── ui/                       # react_dashboard, flask_api
 ├── scripts/
 │   └── run_tests.py
 ├── docs/
 │   ├── STRUCTURE_ANALYSIS.md
-│   └── CODING_STANDARDS.md
+│   └── CODING_STANDARDS.md   # canonical project rules and layout
 └── reports/
-    └── *.html
+    └── .gitkeep
 ```
 
 ### ✅ Structure Validation

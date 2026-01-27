@@ -1,6 +1,13 @@
 from playwright.sync_api import Page
-from automation_testing_playground.models.blazedemo_models import BookingDetails, PassengerInfo, PaymentDetails
+
+from automation_testing_playground.config.settings import TEST_TARGETS_CONFIG
 from automation_testing_playground.helpers.log_helpers import InlineLogger
+from automation_testing_playground.models.blazedemo_models import (
+    BookingDetails,
+    PassengerInfo,
+    PaymentDetails,
+)
+
 
 class PurchasePage:
     """Page Object Model for BlazeDemo Purchase Page"""
@@ -25,7 +32,8 @@ class PurchasePage:
     
     def open_purchase_page(self):
         """Navigate to the purchase page"""
-        self.page.goto("https://blazedemo.com/purchase.php")
+        base = TEST_TARGETS_CONFIG.DEMO_APPS["blazedemo"].rstrip("/")
+        self.page.goto(f"{base}/purchase.php")
         self.page.wait_for_selector(self.name_field, timeout=15000)
     
     def fill_user_details(self, name: str, address: str, city: str, state: str, zip_code: str):

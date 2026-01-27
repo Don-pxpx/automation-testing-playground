@@ -1,6 +1,9 @@
 from playwright.sync_api import Page, expect
+
+from automation_testing_playground.config.orangeHRM_credentials import OrangeHRMData
 from automation_testing_playground.helpers.log_helpers import InlineLogger
 from automation_testing_playground.models.orangehrm_models import LoginCredentials
+
 
 class LoginPage:
     def __init__(self, page: Page):
@@ -16,7 +19,8 @@ class LoginPage:
     def open_login(self):
         """Open OrangeHRM login page."""
         self.logger.step("Open OrangeHRM Login Page")
-        self.page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login")
+        base = OrangeHRMData.BASE_URL.rstrip("/")
+        self.page.goto(f"{base}/web/index.php/auth/login")
         # Wait for Vue.js to render the login form
         self.page.wait_for_selector(self.username_field, timeout=15000)
 

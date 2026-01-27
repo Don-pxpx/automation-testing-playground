@@ -32,30 +32,38 @@ Built for clarity, maintainability, and LinkedIn/portfolio visibility. **No dire
 
 ## Repository Structure
 
+This is the **public automation testing POC** — no other repositories are linked or required.
+
 ```
 automation-testing-playground/
-├── README.md
-├── CONTRIBUTING.md
-├── pyproject.toml
-├── pytest.ini
-├── requirements.txt
-├── src/automation_testing_playground/
-│   ├── pages/           # Page Object Models (SauceDemo, BlazeDemo, OrangeHRM)
-│   ├── models/          # Pydantic models for test data
-│   ├── config/          # Settings, credentials, API config
-│   ├── helpers/         # Logging, utilities
-│   ├── performance/     # Load testing (Locust)
-│   └── security/        # Basic security checks
+├── src/automation_testing_playground/   # Production code
+│   ├── config/              # Credentials & URLs (env + demo fallbacks)
+│   ├── helpers/             # InlineLogger, utilities
+│   ├── models/              # Pydantic/dataclass test data models
+│   ├── pages/               # Page Object Models
+│   │   ├── saucedemo_pages/
+│   │   ├── blazedemo_pages/
+│   │   ├── orangeHRM_pages/
+│   │   └── api/             # API clients
+│   ├── performance/         # Load testing (Locust)
+│   └── security/            # Vulnerability scan helpers
 ├── tests/
-│   ├── e2e/             # End-to-end tests
-│   │   ├── saucedemo/   # Login, cart, checkout
-│   │   ├── blazedemo/   # Flight booking
-│   │   └── OrangeHRM/   # HR flows
-│   ├── integration/     # API tests (e.g. JSONPlaceholder)
+│   ├── e2e/                 # Playwright E2E tests
+│   │   ├── saucedemo/
+│   │   ├── blazedemo/
+│   │   └── OrangeHRM/
+│   ├── integration/         # API integration tests
 │   └── unit/
-├── scripts/             # run_tests.py, etc.
-├── docs/                # Coding standards, structure notes
-└── .github/workflows/   # CI/CD
+├── ui/                      # React dashboard + Flask API
+│   ├── react_dashboard/
+│   └── flask_api/
+├── scripts/                 # run_tests.py, etc.
+├── docs/                    # CODING_STANDARDS.md, STRUCTURE_ANALYSIS.md
+├── .github/workflows/       # CI (sanity, regression, code quality)
+├── reports/                 # Test report output (gitkept)
+├── pytest.ini
+├── pyproject.toml
+└── requirements.txt
 ```
 
 ---
@@ -77,17 +85,28 @@ cd automation-testing-playground
 # Dependencies
 pip install -r requirements.txt
 playwright install chromium
+# playwright install firefox webkit   # optional: multi-browser
+```
 
-# Run all tests
+### Running tests
+
+```bash
+# Run all tests (default: Chromium)
 pytest
 
 # Run a subset
 pytest tests/e2e/saucedemo/
 pytest tests/e2e/blazedemo/
 
+# Run on a specific browser (Chromium, Firefox, or WebKit)
+pytest tests/e2e/saucedemo/ --browser firefox
+pytest tests/e2e/saucedemo/ --browser webkit
+
 # With HTML report
 pytest --html=reports/report.html --self-contained-html
 ```
+
+**Cross-OS and cross-browser:** The app and tests are supported on Windows, macOS, and Linux. Playwright runs the same tests on Chromium, Firefox, and WebKit; use `--browser <name>` as above. CI runs sanity and regression on **Ubuntu and macOS** across **Chromium, Firefox, and WebKit**.
 
 ---
 
@@ -109,6 +128,8 @@ pytest --html=reports/report.html --self-contained-html
 - **Code quality** — Linting and style checks  
 
 Triggers: push to `main`, pull requests, `workflow_dispatch`.
+
+**Security & standards:** No sensitive data (credentials, API keys, tokens) is stored in the repo. All real credentials use environment variables; config uses public-demo fallbacks only (e.g. SauceDemo, OrangeHRM demo). CI secrets (e.g. email notifications) live in GitHub Actions secrets only. See `.cursor/rules/no-secrets-and-standards.mdc` and `docs/CODING_STANDARDS.md`.
 
 ---
 

@@ -35,7 +35,14 @@ pip install -r requirements.txt
 
 ### Running the Dashboard
 
-**Option 1: Manual Start (Two Terminals)**
+**Option 1: One-command start (from repo root)**
+
+- **Windows:** `.\ui\start_dashboard.ps1`
+- **Mac / Linux:** `./ui/start_dashboard.sh` or `bash ui/start_dashboard.sh`
+
+Flask runs in the background; React runs in the foreground. Open http://localhost:3001. To stop Flask after exiting React: `pkill -f "python.*app.py"` (Mac/Linux) or close the extra PowerShell window (Windows).
+
+**Option 2: Manual start (two terminals)**
 
 Terminal 1 - Start Flask API:
 ```bash
@@ -49,7 +56,7 @@ cd ui/react_dashboard
 npm run dev
 ```
 
-**Option 2: Using Docker (Recommended)**
+**Option 3: Using Docker**
 
 ```bash
 cd ui
@@ -112,6 +119,7 @@ python app.py    # Development server (auto-reload)
 - The dashboard currently uses mock data when real test results aren't available
 - To connect real test results, update the Flask API to parse your test report files
 - The dashboard auto-refreshes every 5 seconds
+- **Cross-OS:** Start scripts are provided for Windows (`start_dashboard.ps1`) and Mac/Linux (`start_dashboard.sh`). Run from repo root.
 
 ## 🎉 Enjoy!
 

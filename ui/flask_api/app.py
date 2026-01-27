@@ -260,8 +260,35 @@ def get_all_test_results():
     """Get all test results from actual test reports"""
     results = load_test_results_from_reports()
     
-    # If no results parsed, return empty array (don't use mock data)
-    # The frontend will handle empty state gracefully
+    # When no reports exist, return same mock shape as /recent so UI is consistent
+    if not results:
+        results = [
+            {
+                'id': 1,
+                'name': 'Login Test - Valid Credentials',
+                'suite': 'SauceDemo',
+                'status': 'PASSED',
+                'duration': '2.3s',
+                'timestamp': datetime.now().isoformat(),
+            },
+            {
+                'id': 2,
+                'name': 'Cart Operations Test',
+                'suite': 'SauceDemo',
+                'status': 'PASSED',
+                'duration': '3.1s',
+                'timestamp': (datetime.now() - timedelta(minutes=5)).isoformat(),
+            },
+            {
+                'id': 3,
+                'name': 'Flight Booking Test',
+                'suite': 'BlazeDemo',
+                'status': 'FAILED',
+                'duration': '5.2s',
+                'timestamp': (datetime.now() - timedelta(minutes=10)).isoformat(),
+                'error': 'Element not found: booking confirmation',
+            },
+        ]
     return jsonify(results)
 
 @app.route('/api/test-history', methods=['GET'])
@@ -310,7 +337,11 @@ def get_test_history():
     return jsonify(executions)
 
 if __name__ == '__main__':
-    print('🚀 Starting Automation Testing Dashboard API...')
-    print('📡 API will be available at http://localhost:5001')
-    print('🎯 React dashboard should connect automatically!')
+    # Plain ASCII print to avoid UnicodeEncodeError on Windows (cp1252)
+    for line in [
+        'Starting Automation Testing Dashboard API...',
+        'API will be available at http://localhost:5001',
+        'React dashboard should connect automatically!',
+    ]:
+        print(line, flush=True)
     app.run(debug=True, port=5001, host='0.0.0.0')

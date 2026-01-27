@@ -33,7 +33,8 @@ def test_login_valid_and_invalid(page: Page):
     logger.step("Login with INVALID credentials")
     # Clear session and start fresh
     page.context.clear_cookies()
-    page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login")
+    login_url = f"{OrangeHRMData.BASE_URL.rstrip('/')}/web/index.php/auth/login"
+    page.goto(login_url)
     # Wait for page to load completely
     page.wait_for_timeout(3000)
     

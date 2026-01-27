@@ -1,6 +1,9 @@
 from playwright.sync_api import Page
+
+from automation_testing_playground.config.orangeHRM_credentials import OrangeHRMData
 from automation_testing_playground.helpers.log_helpers import InlineLogger
 from automation_testing_playground.models.orangehrm_models import JobTitleData
+
 
 class AdminPage:
     def __init__(self, page: Page):
@@ -33,8 +36,8 @@ class AdminPage:
     def goto_job_titles(self):
         """Navigate to Job Titles section"""
         self.logger.step("Navigate to Job Titles section")
-        # Navigate directly to the Job Titles page
-        self.page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewJobTitleList")
+        base = OrangeHRMData.BASE_URL.rstrip("/")
+        self.page.goto(f"{base}/web/index.php/admin/viewJobTitleList")
         self.page.wait_for_selector("h6.oxd-text.oxd-text--h6.oxd-topbar-header-breadcrumb-module", timeout=10000)
         self.logger.success("Successfully navigated to Job Titles section")
 
@@ -168,7 +171,8 @@ class AdminPage:
         self.logger.step(f"Verify job title exists: {job_title}")
         try:
             # Navigate back to the job titles list page
-            self.page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewJobTitleList")
+            base = OrangeHRMData.BASE_URL.rstrip("/")
+            self.page.goto(f"{base}/web/index.php/admin/viewJobTitleList")
             self.page.wait_for_timeout(2000)
             
             # Check if the job title appears in the results

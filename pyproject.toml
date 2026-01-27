@@ -1,14 +1,14 @@
-﻿[build-system]
+[build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "performance-security-testing-lab"
+name = "automation-testing-playground"
 version = "1.0.0"
-description = "A comprehensive non-functional testing playground for performance, security, and monitoring"
+description = "Playwright + pytest automation testing playground: E2E, API, Page Object Model, cross-browser, cross-OS"
 authors = [{name = "Sizwe Lethuli", email = "sizwe.lethuli@example.com"}]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -71,13 +71,15 @@ minversion = "6.0"
 addopts = "-ra -q --strict-markers --strict-config"
 testpaths = ["tests"]
 markers = [
+    "smoke: marks tests as smoke/sanity tests",
+    "e2e: marks tests as end-to-end (Playwright) tests",
+    "integration: marks tests as integration tests",
     "performance: marks tests as performance tests",
     "security: marks tests as security tests",
     "load: marks tests as load tests",
     "stress: marks tests as stress tests",
     "vulnerability: marks tests as vulnerability scans",
     "slow: marks tests as slow",
-    "integration: marks tests as integration tests",
 ]
 
 [tool.coverage.run]

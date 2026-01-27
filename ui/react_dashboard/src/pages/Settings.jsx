@@ -19,7 +19,15 @@ export default function Settings() {
 
     if (savedAutoRefresh !== null) setAutoRefresh(savedAutoRefresh === 'true')
     if (savedNotifications !== null) setNotifications(savedNotifications === 'true')
-    if (savedTheme) setTheme(savedTheme)
+    if (savedTheme) {
+      setTheme(savedTheme)
+      const root = document.documentElement
+      root.classList.remove('dark', 'light')
+      const resolved = savedTheme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : savedTheme
+      root.classList.add(resolved)
+    }
     if (savedApiUrl) setApiUrl(savedApiUrl)
 
     // Cleanup timeout on unmount
@@ -30,12 +38,22 @@ export default function Settings() {
     }
   }, [])
 
+  const applyTheme = (t) => {
+    const root = document.documentElement
+    root.classList.remove('dark', 'light')
+    const resolved = t === 'auto'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : t
+    root.classList.add(resolved)
+  }
+
   const handleSave = () => {
     localStorage.setItem('autoRefresh', autoRefresh.toString())
     localStorage.setItem('notifications', notifications.toString())
     localStorage.setItem('theme', theme)
     localStorage.setItem('apiUrl', apiUrl)
     setSaved(true)
+    applyTheme(theme)
     
     // Clear existing timeout if any
     if (timeoutRef.current) {

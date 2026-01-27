@@ -96,7 +96,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData()
-    const interval = setInterval(loadData, 5000) // Refresh every 5 seconds
+    const autoRefresh = typeof window !== 'undefined' && window.localStorage?.getItem('autoRefresh') !== 'false'
+    if (!autoRefresh) return
+    const interval = setInterval(loadData, 5000)
     return () => clearInterval(interval)
   }, [loadData])
 

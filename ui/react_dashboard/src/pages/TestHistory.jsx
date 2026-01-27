@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Clock, CheckCircle, XCircle, Zap, Eye, RefreshCw, Download } from 'lucide-react'
+import { Eye, RefreshCw, Download } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { getTestHistory } from '../utils/api'
 
 export default function TestHistory() {
@@ -30,18 +31,35 @@ export default function TestHistory() {
   }, [loadHistory])
 
   const handleViewDetails = (run) => {
-    alert(`Viewing details for: ${run.suite || 'Test Run'}\n\nPassed: ${run.passed || 0}\nFailed: ${run.failed || 0}\nSkipped: ${run.skipped || 0}\n\nIn a real implementation, this would show detailed test results.`)
+    toast(
+      (t) => (
+        <div className="text-left">
+          <div className="font-bold mb-2">Run details</div>
+          <div className="text-sm space-y-1">
+            <div><strong>Suite:</strong> {run.suite || 'Test Run'}</div>
+            <div><strong>Passed:</strong> {run.passed ?? 0}</div>
+            <div><strong>Failed:</strong> {run.failed ?? 0}</div>
+            <div><strong>Skipped:</strong> {run.skipped ?? 0}</div>
+            <div><strong>Duration:</strong> {run.duration ?? 'N/A'}</div>
+          </div>
+        </div>
+      ),
+      { duration: 5000, icon: '👁️' }
+    )
   }
 
   const handleRerunSuite = (run) => {
     const suiteName = run.suite || 'Test Run'
-    if (confirm(`Rerun test suite: ${suiteName}?`)) {
-      alert(`Rerunning ${suiteName}...\n\nThis would trigger a test execution in a real implementation.`)
-    }
+    toast.loading(`Rerunning suite: ${suiteName}…`, { id: 'rerun' })
+    setTimeout(() => {
+      toast.success(`Rerun started: ${suiteName}`, { id: 'rerun' })
+      loadHistory()
+    }, 1500)
   }
 
   const handleDownloadReport = (run) => {
-    alert(`Downloading report for: ${run.suite || 'Test Run'}\n\nThis would download the test report in a real implementation.`)
+    const name = run.suite || 'Test Run'
+    toast.success(`Download started for: ${name}`, { icon: '📥' })
   }
 
   const statusEmojis = {

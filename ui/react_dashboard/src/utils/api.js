@@ -1,14 +1,25 @@
 import axios from 'axios'
 
-// In Docker, use the service name. In local dev, use localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL ||
-  (window.location.hostname === 'localhost' ? 'http://localhost:5001/api' : '/api')
+function getApiBaseUrl() {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const saved = window.localStorage.getItem('apiUrl')
+    if (saved && saved.trim()) return saved.trim()
+  }
+  return import.meta.env.VITE_API_URL ||
+    (typeof window !== 'undefined' && window.location?.hostname === 'localhost' ? 'http://localhost:5001/api' : '/api')
+}
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
+})
+
+// Use API URL from Settings (localStorage) when set
+api.interceptors.request.use((config) => {
+  config.baseURL = getApiBaseUrl()
+  return config
 })
 
 export const getDashboardStats = async () => {
@@ -67,4 +78,5 @@ export const getTestExecutionDetail = async (id) => {
   }
 }
 
+export { getApiBaseUrl }
 export default api

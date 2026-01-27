@@ -1,5 +1,8 @@
 from playwright.sync_api import Page
+
+from automation_testing_playground.config.settings import TEST_TARGETS_CONFIG
 from automation_testing_playground.models.blazedemo_models import FlightSearch
+
 
 class HomePage:
     def __init__(self, page: Page):
@@ -7,12 +10,12 @@ class HomePage:
 
     def open_homepage(self):
         """Open BlazeDemo homepage."""
-        # Try HTTPS first, then fall back to HTTP if elements don't load quickly
-        self.page.goto("https://blazedemo.com")
+        base = TEST_TARGETS_CONFIG.DEMO_APPS["blazedemo"]
+        self.page.goto(base)
         try:
             self.page.wait_for_selector("select[name='fromPort']", timeout=7000)
         except Exception:
-            self.page.goto("http://blazedemo.com")
+            self.page.goto(base.replace("https://", "http://"))
             self.page.wait_for_selector("select[name='fromPort']", timeout=12000)
 
     def select_departure_city(self, city_name: str):

@@ -10,6 +10,9 @@ The CI workflow is configured to send email notifications **only when workflows 
 
 ## Email Configuration
 
+### Security
+**Never commit real credentials to the repo.** The values below are stored only in GitHub Actions (Settings → Secrets and variables → Actions). This file documents secret *names* and setup steps, not actual values.
+
 ### Required GitHub Secrets
 You need to add the following secrets to your repository:
 

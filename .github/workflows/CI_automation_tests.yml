@@ -16,9 +16,14 @@ env:
 
 jobs:
   sanity-tests:
-    name: 🧪 Sanity Tests
-    runs-on: ubuntu-latest
+    name: 🧪 Sanity (${{ matrix.os }}-${{ matrix.browser }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        browser: [chromium, firefox, webkit]
 
     steps:
     - name: ⬇️ Checkout Repository
@@ -40,14 +45,14 @@ jobs:
     - name: 🎭 Cache Playwright Browsers
       uses: actions/cache@v4
       with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
+        path: ${{ runner.os == 'macOS' && '~/Library/Caches/ms-playwright' || '~/.cache/ms-playwright' }}
+        key: ${{ runner.os }}-playwright-${{ matrix.browser }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
         restore-keys: |
-          ${{ runner.os }}-playwright-
+          ${{ runner.os }}-playwright-${{ matrix.browser }}-
 
     - name: 🎭 Install Playwright Browsers
       run: |
-        playwright install chromium --with-deps
+        playwright install ${{ matrix.browser }} --with-deps
         playwright --version || (echo "Playwright installation failed!" && exit 1)
 
     - name: 🔍 Verify Test Configuration
@@ -56,19 +61,20 @@ jobs:
           echo "Error: pytest.ini not found!"
           exit 1
         fi
-        if [ ! -f "tests/saucedemo/test_login.py" ]; then
+        if [ ! -f "tests/e2e/saucedemo/test_login.py" ]; then
           echo "Error: Test file not found!"
           exit 1
         fi
-        pytest --collect-only tests/saucedemo/test_login.py -q || (echo "Test collection failed!" && exit 1)
+        pytest --collect-only tests/e2e/saucedemo/test_login.py -q --browser ${{ matrix.browser }} || (echo "Test collection failed!" && exit 1)
         echo "Test configuration verified ✓"
 
     - name: 🧪 Run Sanity Tests
       run: |
-        echo "Running sanity tests..."
+        echo "Running sanity tests on ${{ matrix.browser }}..."
         mkdir -p Artifacts/Reports
-        pytest tests/saucedemo/test_login.py -v \
-          --html=Artifacts/Reports/sanity_report.html \
+        pytest tests/e2e/saucedemo/test_login.py -v \
+          --browser ${{ matrix.browser }} \
+          --html=Artifacts/Reports/sanity_report_${{ matrix.browser }}.html \
           --self-contained-html \
           --tb=short \
           --timeout=30 \
@@ -80,24 +86,29 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: Sanity-Test-Report
-        path: Artifacts/Reports/sanity_report.html
+        name: Sanity-Test-Report-${{ matrix.os }}-${{ matrix.browser }}
+        path: Artifacts/Reports/sanity_report_${{ matrix.browser }}.html
         if-no-files-found: ignore
         retention-days: 7
 
     - name: 📊 Sanity Test Summary
       if: always()
       run: |
-        if [ -f "Artifacts/Reports/sanity_report.html" ]; then
-          echo "✅ Sanity test report generated"
+        if [ -f "Artifacts/Reports/sanity_report_${{ matrix.browser }}.html" ]; then
+          echo "✅ Sanity test report generated (${{ matrix.browser }})"
         else
           echo "⚠️ Warning: Test report not found"
         fi
 
   regression-tests:
-    name: 🔄 Regression Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    name: 🔄 Regression (${{ matrix.os }}-${{ matrix.browser }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        browser: [chromium, firefox, webkit]
 
     steps:
     - name: ⬇️ Checkout Repository
@@ -119,14 +130,14 @@ jobs:
     - name: 🎭 Cache Playwright Browsers
       uses: actions/cache@v4
       with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
+        path: ${{ runner.os == 'macOS' && '~/Library/Caches/ms-playwright' || '~/.cache/ms-playwright' }}
+        key: ${{ runner.os }}-playwright-${{ matrix.browser }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/pytest.ini') }}
         restore-keys: |
-          ${{ runner.os }}-playwright-
+          ${{ runner.os }}-playwright-${{ matrix.browser }}-
 
     - name: 🎭 Install Playwright Browsers
       run: |
-        playwright install chromium --with-deps
+        playwright install ${{ matrix.browser }} --with-deps
         playwright --version || (echo "Playwright installation failed!" && exit 1)
 
     - name: 🔍 Verify Test Configuration
@@ -135,20 +146,21 @@ jobs:
           echo "Error: pytest.ini not found!"
           exit 1
         fi
-        test_count=$(find tests/saucedemo -name "test_*.py" | wc -l)
+        test_count=$(find tests/e2e/saucedemo -name "test_*.py" | wc -l)
         if [ "$test_count" -eq 0 ]; then
-          echo "Error: No test files found in tests/saucedemo/"
+          echo "Error: No test files found in tests/e2e/saucedemo/"
           exit 1
         fi
-        pytest --collect-only tests/saucedemo/ -q || (echo "Test collection failed!" && exit 1)
+        pytest --collect-only tests/e2e/saucedemo/ -q --browser ${{ matrix.browser }} || (echo "Test collection failed!" && exit 1)
         echo "Found $test_count test file(s) ✓"
 
     - name: 🔄 Run Regression Tests
       run: |
-        echo "Running regression tests..."
+        echo "Running regression tests on ${{ matrix.browser }}..."
         mkdir -p Artifacts/Reports
-        pytest tests/saucedemo/ -v \
-          --html=Artifacts/Reports/regression_report.html \
+        pytest tests/e2e/saucedemo/ -v \
+          --browser ${{ matrix.browser }} \
+          --html=Artifacts/Reports/regression_report_${{ matrix.browser }}.html \
           --self-contained-html \
           --tb=short \
           --timeout=30 \
@@ -160,16 +172,16 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: Regression-Test-Report
-        path: Artifacts/Reports/regression_report.html
+        name: Regression-Test-Report-${{ matrix.os }}-${{ matrix.browser }}
+        path: Artifacts/Reports/regression_report_${{ matrix.browser }}.html
         if-no-files-found: ignore
         retention-days: 7
 
     - name: 📊 Regression Test Summary
       if: always()
       run: |
-        if [ -f "Artifacts/Reports/regression_report.html" ]; then
-          echo "✅ Regression test report generated"
+        if [ -f "Artifacts/Reports/regression_report_${{ matrix.browser }}.html" ]; then
+          echo "✅ Regression test report generated (${{ matrix.browser }})"
         else
           echo "⚠️ Warning: Test report not found"
         fi
@@ -196,8 +208,8 @@ jobs:
 
     - name: 🔍 Verify Code Files Exist
       run: |
-        if [ ! -d "pages" ] || [ ! -d "tests" ]; then
-          echo "Error: Code directories not found!"
+        if [ ! -d "src" ] || [ ! -d "tests" ]; then
+          echo "Error: Code directories (src/, tests/) not found!"
           exit 1
         fi
         echo "Code directories verified ✓"
@@ -205,7 +217,7 @@ jobs:
     - name: 🔍 Run Flake8 (Critical Errors)
       run: |
         echo "Running Flake8 critical error checks..."
-        flake8 pages/ tests/ \
+        flake8 src/ tests/ \
           --count \
           --select=E9,F63,F7,F82 \
           --show-source \
@@ -214,7 +226,7 @@ jobs:
     - name: 🔍 Run Flake8 (Style Checks)
       run: |
         echo "Running Flake8 style checks..."
-        flake8 pages/ tests/ \
+        flake8 src/ tests/ \
           --count \
           --exit-zero \
           --max-complexity=10 \
@@ -224,10 +236,11 @@ jobs:
     - name: 🔍 Run Pylint
       run: |
         echo "Running Pylint..."
-        pylint pages/*.py tests/**/*.py \
+        pylint src/automation_testing_playground/ tests/ \
           --disable=all \
           --enable=E,F \
-          --exit-zero
+          --exit-zero \
+          --ignore=venv,.venv
 
     - name: ✅ Code Quality Summary
       if: always()

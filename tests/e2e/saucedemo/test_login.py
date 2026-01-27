@@ -22,8 +22,8 @@ def test_invalid_login(page: Page):
 
     page.goto(TestData.BASE_URL)
     logger.note("Entering incorrect username and password ❌")
-    page.fill("#user-name", "wrong_user")
-    page.fill("#password", "wrong_pass")
+    page.fill("#user-name", TestData.INVALID_USER)
+    page.fill("#password", TestData.INVALID_PASSWORD)
     page.click("#login-button")
 
     expect(page.locator("h3[data-test='error']")).to_be_visible()

@@ -160,7 +160,7 @@ class TestHTTPMethods:
         """Test custom headers"""
         self.logger.test_start("Custom Headers Test")
         
-        # Custom headers
+        # Custom headers (test-only placeholders; no real secrets)
         custom_headers = {
             "X-Custom-Header": "test-value",
             "X-Request-ID": fake.uuid4(),
