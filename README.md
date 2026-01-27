@@ -138,7 +138,6 @@ Triggers: push to `main`, pull requests, `workflow_dispatch`.
 **Sizwe** · QA Engineer · Gauteng, South Africa  
 
 - [LinkedIn](https://linkedin.com/in/sizwe-lethuli-59274919)  
-- [GitHub](https://github.com/Don-pxpx)
 
 ---
 
