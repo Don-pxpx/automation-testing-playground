@@ -1,0 +1,13 @@
+# Run E2E tests in a container (bypasses host sandbox/proxy).
+# Windows: Docker Desktop with WSL2 backend (Linux containers).
+# Usage: docker compose run --rm tests
+services:
+  tests:
+    build: .
+    init: true
+    ipc: host
+    environment:
+      - PLAYWRIGHT_HEADED=0
+    command: pytest tests/e2e/ -v
+    # Optional: run specific suite
+    # command: pytest tests/e2e/saucedemo/ tests/e2e/blazedemo/ -v

@@ -58,7 +58,7 @@ automation-testing-playground/
 │   ├── react_dashboard/
 │   └── flask_api/
 ├── scripts/                 # run_tests.py, etc.
-├── docs/                    # CODING_STANDARDS.md
+├── docs/                    # CODING_STANDARDS.md, DOCKER.md
 ├── .github/workflows/       # CI (sanity, regression, code quality)
 ├── reports/                 # Test report output (gitkept)
 ├── pytest.ini
@@ -105,6 +105,17 @@ pytest tests/e2e/saucedemo/ --browser webkit
 # With HTML report
 pytest --html=reports/report.html --self-contained-html
 ```
+
+### Run with Docker (Windows)
+
+To avoid host sandbox, proxy, or plugin conflicts, run tests in a Linux container:
+
+```powershell
+docker compose build
+docker compose run --rm tests
+```
+
+See [docs/DOCKER.md](docs/DOCKER.md) for prerequisites (Docker Desktop + WSL2) and options.
 
 **Cross-OS and cross-browser:** The app and tests are supported on Windows, macOS, and Linux. Playwright runs the same tests on Chromium, Firefox, and WebKit; use `--browser <name>` as above. CI runs sanity and regression on **Ubuntu and macOS** across **Chromium, Firefox, and WebKit**.
 
