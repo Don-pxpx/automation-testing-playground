@@ -8,7 +8,7 @@ def test_locked_out_user_shows_error(page: Page):
     logger.step("Starting Test: Locked-out user cannot login 🚫")
 
     page.goto(TestData.BASE_URL)
-    page.fill("#user-name", "locked_out_user")
+    page.fill("#user-name", TestData.INVALID_USER)
     page.fill("#password", TestData.VALID_PASSWORD)
     page.click("#login-button")
 

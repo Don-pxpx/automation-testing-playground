@@ -13,7 +13,7 @@ These standards codify the conventions used in this repository so contributors c
 ### Project structure
 
 - **Production code** lives under `src/automation_testing_playground/`:
-  - **Config**: `config/` — credentials and URLs; small data-holder classes (e.g. `TestData`, `OrangeHRMData`). Read from `os.environ.get(...)` with public-demo fallbacks only.
+  - **Config**: `config/` — credentials and URLs; small data-holder classes (e.g. `TestData`, `OrangeHRMData`, `BlazeDemoData`). Read from `os.environ.get(...)` with public-demo fallbacks only.
   - **Page objects**: `pages/<app>_pages/` — one class per file, named `<Thing>Page` (e.g. `CartPage`, `LoginPage`).
   - **Helpers**: `helpers/` — e.g. `InlineLogger`, shared logging/utilities.
   - **Models**: `models/` — Pydantic or dataclass models for test data.

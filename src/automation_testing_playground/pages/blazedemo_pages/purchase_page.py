@@ -1,5 +1,6 @@
 from playwright.sync_api import Page
 
+from automation_testing_playground.config.blazedemo_config import BlazeDemoData
 from automation_testing_playground.config.settings import TEST_TARGETS_CONFIG
 from automation_testing_playground.helpers.log_helpers import InlineLogger
 from automation_testing_playground.models.blazedemo_models import (
@@ -113,11 +114,11 @@ class PurchasePage:
         self.page.fill(self.city_field, "Test City")
         self.page.fill(self.state_field, "TS")
         self.page.fill(self.zip_code_field, "12345")
-        self.page.select_option(self.card_type_dropdown, label="American Express")
-        self.page.fill(self.credit_card_number_field, "1234567890123456")
-        self.page.fill(self.credit_card_month_field, "12")
-        self.page.fill(self.credit_card_year_field, "2025")
-        self.page.fill(self.name_on_card_field, "Test User")
+        self.page.select_option(self.card_type_dropdown, label=BlazeDemoData.DEMO_CARD_TYPE)
+        self.page.fill(self.credit_card_number_field, BlazeDemoData.DEMO_CARD_NUMBER)
+        self.page.fill(self.credit_card_month_field, BlazeDemoData.DEMO_EXPIRY_MONTH)
+        self.page.fill(self.credit_card_year_field, BlazeDemoData.DEMO_EXPIRY_YEAR)
+        self.page.fill(self.name_on_card_field, BlazeDemoData.DEMO_NAME_ON_CARD)
     
     def verify_email_validation_error(self) -> bool:
         """Verify that email validation error is shown (BlazeDemo doesn't have validation)"""
@@ -135,11 +136,11 @@ class PurchasePage:
         self.page.fill(self.city_field, "Test City")
         self.page.fill(self.state_field, "TS")
         self.page.fill(self.zip_code_field, "12345")
-        self.page.select_option(self.card_type_dropdown, label="American Express")
-        self.page.fill(self.credit_card_number_field, "1234567890123456")
-        self.page.fill(self.credit_card_month_field, "12")
-        self.page.fill(self.credit_card_year_field, "2025")
-        self.page.fill(self.name_on_card_field, "Test User")
+        self.page.select_option(self.card_type_dropdown, label=BlazeDemoData.DEMO_CARD_TYPE)
+        self.page.fill(self.credit_card_number_field, BlazeDemoData.DEMO_CARD_NUMBER)
+        self.page.fill(self.credit_card_month_field, BlazeDemoData.DEMO_EXPIRY_MONTH)
+        self.page.fill(self.credit_card_year_field, BlazeDemoData.DEMO_EXPIRY_YEAR)
+        self.page.fill(self.name_on_card_field, BlazeDemoData.DEMO_NAME_ON_CARD)
     
     def verify_name_field_handling(self, name: str) -> bool:
         """Verify how the name field handles special characters"""
@@ -155,11 +156,11 @@ class PurchasePage:
         self.page.fill(self.name_field, "Test User")
         self.page.fill(self.address_field, "123 Test St")
         # Leave city, state, zip_code empty
-        self.page.select_option(self.card_type_dropdown, label="American Express")
-        self.page.fill(self.credit_card_number_field, "1234567890123456")
-        self.page.fill(self.credit_card_month_field, "12")
-        self.page.fill(self.credit_card_year_field, "2025")
-        self.page.fill(self.name_on_card_field, "Test User")
+        self.page.select_option(self.card_type_dropdown, label=BlazeDemoData.DEMO_CARD_TYPE)
+        self.page.fill(self.credit_card_number_field, BlazeDemoData.DEMO_CARD_NUMBER)
+        self.page.fill(self.credit_card_month_field, BlazeDemoData.DEMO_EXPIRY_MONTH)
+        self.page.fill(self.credit_card_year_field, BlazeDemoData.DEMO_EXPIRY_YEAR)
+        self.page.fill(self.name_on_card_field, BlazeDemoData.DEMO_NAME_ON_CARD)
     
     def verify_required_field_validation(self) -> bool:
         """Verify that required field validation works (BlazeDemo doesn't have validation)"""

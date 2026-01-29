@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import Page, expect
+from automation_testing_playground.config.blazedemo_config import BlazeDemoData
 from automation_testing_playground.pages.blazedemo_pages.purchase_page import PurchasePage
 
 class BlazeDemoFormValidationTests:
@@ -118,9 +119,15 @@ def test_valid_form_submission(page: Page):
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
     
-    # Fill form with valid data
+    # Fill form with valid data (config for card details per CODING_STANDARDS)
     purchase_page.fill_user_details("John Doe", "123 Main St", "Anytown", "CA", "12345")
-    purchase_page.fill_card_details("American Express", "1234567890123456", "12", "2025", "John Doe")
+    purchase_page.fill_card_details(
+        BlazeDemoData.DEMO_CARD_TYPE,
+        BlazeDemoData.DEMO_CARD_NUMBER,
+        BlazeDemoData.DEMO_EXPIRY_MONTH,
+        BlazeDemoData.DEMO_EXPIRY_YEAR,
+        BlazeDemoData.DEMO_NAME_ON_CARD,
+    )
     
     # Submit the form
     purchase_page.click_purchase_flight()
