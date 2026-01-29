@@ -112,8 +112,8 @@ def test_employee_search_and_filtering(page: Page):
 
     # Test 5: Clear search and verify all employees visible
     logger.step("Clear search and verify all employees visible")
-    # Clear the search field
-    search_field = page.locator("input[placeholder='Type for hints...']")
+    # Clear the search field (use .first - Employee List has 2 hint inputs)
+    search_field = page.locator("input[placeholder='Type for hints...']").first
     if search_field.is_visible():
         search_field.fill("")
         page.click("button[type='submit']")
