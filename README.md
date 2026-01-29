@@ -58,7 +58,7 @@ automation-testing-playground/
 │   ├── react_dashboard/
 │   └── flask_api/
 ├── scripts/                 # run_tests.py, etc.
-├── docs/                    # CODING_STANDARDS.md, STRUCTURE_ANALYSIS.md
+├── docs/                    # CODING_STANDARDS.md
 ├── .github/workflows/       # CI (sanity, regression, code quality)
 ├── reports/                 # Test report output (gitkept)
 ├── pytest.ini

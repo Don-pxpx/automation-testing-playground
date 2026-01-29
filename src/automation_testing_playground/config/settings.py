@@ -11,7 +11,8 @@ class TestTargetsConfig:
     """Configuration for test targets"""
     DEMO_APPS: Dict[str, str] = None
     API_ENDPOINTS: Dict[str, str] = None
-    
+    INTERNAL_APPS: Dict[str, str] = None  # Optional; used by scripts/run_tests.py targets
+
     def __post_init__(self):
         if self.DEMO_APPS is None:
             self.DEMO_APPS = {
@@ -24,6 +25,8 @@ class TestTargetsConfig:
                 "jsonplaceholder": "https://jsonplaceholder.typicode.com",
                 "httpbin": "https://httpbin.org"
             }
+        if self.INTERNAL_APPS is None:
+            self.INTERNAL_APPS = {}  # No internal apps by default; override via env if needed
 
 
 @dataclass
