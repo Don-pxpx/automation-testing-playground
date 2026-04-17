@@ -82,6 +82,11 @@ automation-testing-playground/
 git clone https://github.com/Don-pxpx/automation-testing-playground.git
 cd automation-testing-playground
 
+# Virtual environment (recommended; `.venv` is gitignored — do not commit it)
+python -m venv .venv
+# Windows (PowerShell): .\.venv\Scripts\Activate.ps1
+# macOS / Linux:         source .venv/bin/activate
+
 # Dependencies
 pip install -r requirements.txt
 playwright install chromium
