@@ -1,6 +1,6 @@
 import random
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from faker import Faker
 
 from automation_testing_playground.helpers.log_helpers import InlineLogger
@@ -65,12 +65,11 @@ def test_booking_details_match(page: Page):
     exp_month = str(random.randint(1, 12)).zfill(2)
     exp_year = str(random.randint(2025, 2030))
 
-    # Get price from purchase page before submitting
+    # Get price from purchase page before submitting (via purchase façade)
     # INTENTIONAL FAILURE: Price might not be captured correctly or might change
     try:
-        price_element = page.locator("p:has-text('Price')").first
-        if price_element.is_visible():
-            price_text = price_element.text_content() or ""
+        price_text = purchase.get_fare_line_text_near_price_label()
+        if price_text:
             expected_price = price_text.split("$")[-1].strip() if "$" in price_text else "Unknown"
             logger.note(f"Expected price from purchase page: ${expected_price}")
         else:
