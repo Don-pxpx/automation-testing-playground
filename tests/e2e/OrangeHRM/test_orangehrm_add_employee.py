@@ -13,7 +13,7 @@ from automation_testing_playground.models.orangehrm_models import LoginCredentia
 fake = Faker()
 
 def test_add_employee_random_and_with_custom_id(page: Page):
-    """Test adding employee with random data and custom employee ID."""
+    """OHR-PIM-001: HR user adds employees with random and custom IDs (appropriateness)."""
     logger = InlineLogger()
 
     # 🔐 LOGIN (fresh session for reliability)

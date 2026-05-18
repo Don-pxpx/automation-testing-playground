@@ -1,6 +1,6 @@
 # Automation Testing Playground
 
-**Playwright + Python + pytest** — End-to-end and API test automation with Page Object Model.  
+**Playwright + Python + pytest** — Web UI functional test automation with Page Object Model.  
 *Portfolio POC · Read-only*
 
 ---
@@ -10,7 +10,7 @@
 This repository is a **proof-of-concept** for test automation using **Playwright**, **Python**, and **pytest**. It demonstrates:
 
 - **Page Object Model (POM)** — Reusable page objects for SauceDemo, BlazeDemo, and OrangeHRM
-- **E2E & API tests** — Functional flows, cart/checkout, login, and REST API checks
+- **E2E UI tests** — Functional flows: login, cart/checkout, booking, HR admin (see `docs/REQUIREMENTS_TRACE.md`)
 - **Structured framework** — Clear separation of pages, tests, config, and helpers
 - **CI/CD-ready** — GitHub Actions for sanity, regression, and code quality
 
@@ -26,7 +26,7 @@ Built for clarity, maintainability, and LinkedIn/portfolio visibility. **No dire
 | **E2E**     | Playwright (Chromium / Firefox / WebKit) |
 | **Test**    | pytest, pytest-playwright       |
 | **Data**    | Pydantic, dotenv, YAML          |
-| **Reports** | pytest-html, custom logging      |
+| **Reports** | pytest-html, metrics JSON, TypeScript dashboard |
 
 ---
 
@@ -41,20 +41,13 @@ automation-testing-playground/
 │   ├── helpers/             # InlineLogger, utilities
 │   ├── models/              # Pydantic/dataclass test data models
 │   ├── pages/               # Page Object Models
-│   │   ├── saucedemo_pages/
-│   │   ├── blazedemo_pages/
-│   │   ├── orangeHRM_pages/
-│   │   └── api/             # API clients
-│   ├── performance/         # Load testing (Locust)
-│   └── security/            # Vulnerability scan helpers
+│   ├── flows/               # User-journey flow objects
 ├── tests/
-│   ├── e2e/                 # Playwright E2E tests
-│   │   ├── saucedemo/
-│   │   ├── blazedemo/
-│   │   └── OrangeHRM/
-│   ├── integration/         # API integration tests
-│   └── unit/
-├── ui/                      # React dashboard + Flask API
+│   ├── conftest.py          # Shared fixtures + metrics export
+│   └── e2e/                 # Playwright web UI tests
+├── archive/                 # Archived non-functional & API code
+├── ui/
+│   ├── reporting/           # TypeScript metrics library
 │   ├── react_dashboard/
 │   └── flask_api/
 ├── scripts/                 # run_tests.py, etc.
@@ -96,12 +89,13 @@ playwright install chromium
 ### Running tests
 
 ```bash
-# Run all tests (default: Chromium)
-pytest
+# Run all web UI tests (default: Chromium)
+pytest tests/e2e/
 
 # Run a subset
 pytest tests/e2e/saucedemo/
 pytest tests/e2e/blazedemo/
+pytest tests/e2e/OrangeHRM/
 
 # Run on a specific browser (Chromium, Firefox, or WebKit)
 pytest tests/e2e/saucedemo/ --browser firefox
@@ -133,7 +127,6 @@ See [docs/DOCKER.md](docs/DOCKER.md) for prerequisites (Docker Desktop + WSL2) a
 | **SauceDemo** | Login, cart, cart removal, checkout |
 | **BlazeDemo** | Flight search, booking, payment confirmation |
 | **OrangeHRM** | Login, job titles, employee search, PIM, My Info |
-| **API**       | JSONPlaceholder (HTTP methods, endpoints) |
 
 ---
 

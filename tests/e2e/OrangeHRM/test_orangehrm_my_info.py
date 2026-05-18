@@ -12,6 +12,7 @@ from automation_testing_playground.models.orangehrm_models import LoginCredentia
 fake = Faker()
 
 def test_my_info_management_comprehensive(page: Page):
+    """OHR-SELF-001: Employee can update My Info personal details (functional appropriateness)."""
     """Test My Info management functionality."""
     logger = InlineLogger()
     logger.test_start("My Info Management Comprehensive Test")

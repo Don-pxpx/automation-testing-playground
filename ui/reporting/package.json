@@ -1,0 +1,15 @@
+{
+  "name": "@automation-playground/reporting",
+  "version": "1.0.0",
+  "description": "TypeScript test reporting metrics for the automation dashboard",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

@@ -15,8 +15,9 @@ from automation_testing_playground.models.blazedemo_models import (
 
 fake = Faker()
 
+@pytest.mark.smoke
 def test_complete_booking_flow(page: Page):
-    """Test complete booking flow with Pydantic models."""
+    """BZD-BOOK-001: End-to-end flight search, purchase, and confirmation (appropriateness)."""
     logger = InlineLogger()
     logger.step("Starting Test: Complete Booking Flow")
 

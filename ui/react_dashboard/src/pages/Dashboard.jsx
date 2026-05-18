@@ -4,7 +4,9 @@ import { RefreshCw } from 'lucide-react'
 import StatCard from '../components/StatCard'
 import RecentTests from '../components/RecentTests'
 import { TestResultsBarChart, TestResultsPieChart } from '../components/TestChart'
-import { getDashboardStats, getRecentTestResults } from '../utils/api'
+import { getDashboardStats, getRecentTestResults, getTestMetrics } from '../utils/api'
+import { toDashboardView, emptyMetrics } from '../utils/metrics'
+import MetricsPanel from '../components/MetricsPanel'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,13 +38,15 @@ export default function Dashboard() {
   })
   const [recentTests, setRecentTests] = useState([])
   const [suiteData, setSuiteData] = useState([])
+  const [metricsView, setMetricsView] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
     try {
-      const [statsData, testsData] = await Promise.all([
+      const [statsData, testsData, metricsData] = await Promise.all([
         getDashboardStats(),
-        getRecentTestResults(5)
+        getRecentTestResults(5),
+        getTestMetrics(),
       ])
       
       // Validate and set stats data
@@ -64,18 +68,21 @@ export default function Dashboard() {
         setRecentTests([])
       }
       
-      // Generate suite data for charts based on actual stats
-      const suites = ['SauceDemo', 'BlazeDemo', 'OrangeHRM', 'API']
-      const totalPassed = statsData?.passed || 35
-      const totalFailed = statsData?.failed || 5
-      const totalSkipped = statsData?.skipped || 2
-      
-      setSuiteData(suites.map((suite, index) => ({
-        suite,
-        passed: Math.floor(totalPassed / suites.length) + (index === 0 ? totalPassed % suites.length : 0),
-        failed: Math.floor(totalFailed / suites.length) + (index === 0 ? totalFailed % suites.length : 0),
-        skipped: Math.floor(totalSkipped / suites.length) + (index === 0 ? totalSkipped % suites.length : 0),
-      })))
+      if (metricsData?.summary?.total) {
+        setMetricsView(toDashboardView(metricsData))
+        setSuiteData(
+          Object.entries(metricsData.bySuite || {}).map(([suite, counts]) => ({
+            suite,
+            passed: counts.passed || 0,
+            failed: counts.failed || 0,
+            skipped: counts.skipped || 0,
+            xfailed: counts.xfailed || 0,
+          })),
+        )
+      } else {
+        setMetricsView(toDashboardView(emptyMetrics()))
+        setSuiteData([])
+      }
       
       setLoading(false)
     } catch (error) {
@@ -187,6 +194,12 @@ export default function Dashboard() {
           animationDelay={0.4}
         />
       </motion.div>
+
+      {metricsView && (
+        <motion.div variants={itemVariants}>
+          <MetricsPanel view={metricsView} />
+        </motion.div>
+      )}
 
       {/* Charts Row */}
       <motion.div

@@ -1,18 +1,16 @@
 from playwright.sync_api import Page, expect
-from automation_testing_playground.pages.saucedemo_pages.login_page import LoginPage
-from automation_testing_playground.pages.saucedemo_pages.cart_page import CartPage
-from automation_testing_playground.helpers.log_helpers import InlineLogger
 
-def test_add_single_product_to_cart(page: Page):
+from automation_testing_playground.helpers.log_helpers import InlineLogger
+from automation_testing_playground.pages.saucedemo_pages.cart_page import CartPage
+
+
+def test_add_single_product_to_cart(logged_in_inventory: CartPage):
+    """SDC-CART-001: One product added; cart badge and cart page reflect item (correctness)."""
     logger = InlineLogger()
+    cart = logged_in_inventory
+    page = cart.page
 
     logger.step("Starting Test: Add Single Product to Cart 🛒")
-
-    login = LoginPage(page)
-    cart = CartPage(page)
-
-    logger.step("Logging in with valid credentials 🔐")
-    login.login_with_valid_credentials()
 
     logger.step("Adding first product to cart 🧃")
     cart.add_item_by_index(0)
@@ -28,16 +26,14 @@ def test_add_single_product_to_cart(page: Page):
 
     logger.summary(passed=1, failed=0, skipped=0)
 
-def test_add_backpack_or_fleece_items_only_to_cart(page: Page):
+
+def test_add_backpack_or_fleece_items_only_to_cart(logged_in_inventory: CartPage):
+    """SDC-CART-002: Only backpack and fleece can be added together (completeness)."""
     logger = InlineLogger()
+    cart = logged_in_inventory
+    page = cart.page
 
     logger.step("Starting Test: Add Backpack or Fleece Items Only 🎯")
-
-    login = LoginPage(page)
-    cart = CartPage(page)
-
-    logger.step("Logging in with valid credentials 🔐")
-    login.login_with_valid_credentials()
 
     logger.step("Adding Backpack and Fleece items to cart 🎒🧥")
     added_items = cart.add_backpack_and_fleece_only()

@@ -152,6 +152,18 @@ def load_test_results_from_reports():
     
     return results
 
+def load_metrics_latest():
+    """Load structured metrics JSON written by pytest session hook."""
+    metrics_file = REPORTS_DIR / 'metrics-latest.json'
+    if metrics_file.exists():
+        try:
+            with open(metrics_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading metrics: {e}")
+    return None
+
+
 def load_test_executions():
     """Load test execution history"""
     executions = []
@@ -179,9 +191,48 @@ def health():
         'timestamp': datetime.now().isoformat()
     })
 
+@app.route('/api/metrics', methods=['GET'])
+def get_test_metrics():
+    """Structured test metrics for TypeScript dashboard (from metrics-latest.json)."""
+    metrics = load_metrics_latest()
+    if metrics:
+        return jsonify(metrics)
+    return jsonify({
+        'runId': None,
+        'timestamp': datetime.now().isoformat(),
+        'summary': {
+            'total': 0,
+            'passed': 0,
+            'failed': 0,
+            'skipped': 0,
+            'xfailed': 0,
+            'passRate': 0,
+        },
+        'bySuite': {},
+        'byRequirement': {},
+        'tests': [],
+    })
+
+
 @app.route('/api/dashboard/stats', methods=['GET'])
 def get_dashboard_stats():
     """Get dashboard statistics from actual test results"""
+    metrics = load_metrics_latest()
+    if metrics and metrics.get('summary'):
+        summary = metrics['summary']
+        return jsonify({
+            'totalTests': summary.get('total', 0),
+            'passed': summary.get('passed', 0),
+            'failed': summary.get('failed', 0),
+            'skipped': summary.get('skipped', 0),
+            'xfailed': summary.get('xfailed', 0),
+            'passRate': summary.get('passRate', 0),
+            'totalSuites': len(metrics.get('bySuite', {})),
+            'requirementCount': len(metrics.get('byRequirement', {})),
+            'durationSeconds': metrics.get('durationSeconds', 0),
+            'lastRun': metrics.get('timestamp', datetime.now().isoformat()),
+        })
+
     results = load_test_results_from_reports()
     
     # Calculate actual stats from parsed results

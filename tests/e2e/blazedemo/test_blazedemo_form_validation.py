@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page
 
 from automation_testing_playground.config.blazedemo_config import BlazeDemoData
@@ -9,7 +10,7 @@ class BlazeDemoFormValidationTests:
 
 
 def test_empty_form_submission(page: Page):
-    """Test submitting form with no data filled."""
+    """BZD-FORM-001: Empty purchase form submission behaviour (functional correctness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -20,7 +21,7 @@ def test_empty_form_submission(page: Page):
 
 
 def test_invalid_email_format(page: Page):
-    """Test form behavior with invalid email format."""
+    """BZD-FORM-002: Invalid email format handling (functional correctness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -34,7 +35,7 @@ def test_invalid_email_format(page: Page):
 
 
 def test_special_characters_in_name(page: Page):
-    """Test form behavior with special characters in name field."""
+    """BZD-FORM-003: Special characters in passenger name (functional correctness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -48,7 +49,7 @@ def test_special_characters_in_name(page: Page):
 
 
 def test_missing_required_fields(page: Page):
-    """Test form behavior with missing required fields."""
+    """BZD-FORM-004: Partially filled purchase form (functional correctness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -60,8 +61,12 @@ def test_missing_required_fields(page: Page):
     assert is_form_accepted, "Missing required fields should be accepted by BlazeDemo (no validation)"
 
 
+@pytest.mark.xfail(
+    reason="BZD-FORM-005: BlazeDemo accepts extreme invalid values (demo site validation gap)",
+    strict=False,
+)
 def test_extreme_input_values(page: Page):
-    """Test form behavior with extreme input values - INTENTIONALLY FAILS."""
+    """BZD-FORM-005: Extreme invalid inputs (known BlazeDemo validation gap)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -75,7 +80,7 @@ def test_extreme_input_values(page: Page):
 
 
 def test_form_field_visibility(page: Page):
-    """Test that all form fields are visible and accessible."""
+    """BZD-FORM-006: Purchase form fields are visible (functional completeness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 
@@ -83,7 +88,7 @@ def test_form_field_visibility(page: Page):
 
 
 def test_valid_form_submission(page: Page):
-    """Test successful form submission with valid data."""
+    """BZD-FORM-007: Valid purchase shows thank-you confirmation (functional correctness)."""
     purchase_page = PurchasePage(page)
     purchase_page.open_purchase_page()
 

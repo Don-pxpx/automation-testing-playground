@@ -1,23 +1,21 @@
-# tests/test_cart_removal.py
-
-from playwright.sync_api import Page, expect
-from automation_testing_playground.pages.saucedemo_pages.login_page import LoginPage
-from automation_testing_playground.pages.saucedemo_pages.cart_page import CartPage
-from automation_testing_playground.helpers.log_helpers import InlineLogger
-from faker import Faker
 import random
+
+from faker import Faker
+from playwright.sync_api import expect
+
+from automation_testing_playground.helpers.log_helpers import InlineLogger
+from automation_testing_playground.pages.saucedemo_pages.cart_page import CartPage
 
 faker = Faker()
 
-def test_remove_random_items_keep_backpack_or_fleece(page: Page):
+
+def test_remove_random_items_keep_backpack_or_fleece(logged_in_inventory: CartPage):
+    """SDC-CART-003: User can remove items while keeping a chosen product (appropriateness)."""
     logger = InlineLogger()
+    cart = logged_in_inventory
+    page = cart.page
+
     logger.step("Starting Test: Remove Random Items & Keep Backpack/Fleece 🎒🧥")
-
-    login = LoginPage(page)
-    cart = CartPage(page)
-
-    logger.step("Logging in with valid credentials 🔐")
-    login.login_with_valid_credentials()
 
     preferred_items = ["Sauce Labs Backpack", "Sauce Labs Fleece Jacket"]
     chosen_item = random.choice(preferred_items)
@@ -50,16 +48,13 @@ def test_remove_random_items_keep_backpack_or_fleece(page: Page):
 
     logger.summary(passed=1, failed=0, skipped=0)
 
-def test_remove_all_items_from_cart(page: Page):
+
+def test_remove_all_items_from_cart(logged_in_inventory: CartPage):
+    """SDC-CART-004: User can empty the cart completely (functional correctness)."""
     logger = InlineLogger()
+    cart = logged_in_inventory
+
     logger.step("Starting Test: Remove All Items from Cart 🧹")
-
-    login = LoginPage(page)
-    cart = CartPage(page)
-
-    logger.step("Logging in with valid credentials 🔐")
-    login.login_with_valid_credentials()
-
     logger.step("Adding random items to cart 🛍️")
     cart.add_random_items()
 
@@ -68,22 +63,20 @@ def test_remove_all_items_from_cart(page: Page):
     cart.remove_all_items()
 
     remaining_items = cart.get_cart_items_names()
-    remaining_items = [item for item in remaining_items if item]  # Filter out None values
+    remaining_items = [item for item in remaining_items if item]
     assert len(remaining_items) == 0
     logger.success("✅ Cart is empty after removals! 🧺")
 
     logger.summary(passed=1, failed=0, skipped=0)
 
-def test_complex_checkout_flow_add_then_finish(page: Page):
+
+def test_complex_checkout_flow_add_then_finish(logged_in_inventory: CartPage):
+    """SDC-CART-005: Cancelled checkout then second purchase completes (appropriateness)."""
     logger = InlineLogger()
+    cart = logged_in_inventory
+    page = cart.page
+
     logger.step("Starting Test: Complex Checkout Flow 🌀")
-
-    login = LoginPage(page)
-    cart = CartPage(page)
-
-    logger.step("Logging in with valid credentials 🔐")
-    login.login_with_valid_credentials()
-
     logger.step("Adding first item to cart 🛒")
     cart.add_item_by_index(0)
 
@@ -96,7 +89,7 @@ def test_complex_checkout_flow_add_then_finish(page: Page):
     logger.note(f"Filling checkout form with: {first_name} {last_name}, {postal_code}")
 
     cart.fill_checkout_form(first_name, last_name, postal_code)
-    page.click("#cancel")  # Returning to inventory page
+    page.click("#cancel")
     logger.step("Cancelled checkout, adding another item 🛍️")
 
     cart.add_item_by_index(1)

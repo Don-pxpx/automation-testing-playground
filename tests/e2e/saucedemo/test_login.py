@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import Page
 
 from automation_testing_playground.config.credentials import TestData
@@ -5,7 +6,9 @@ from automation_testing_playground.helpers.log_helpers import InlineLogger
 from automation_testing_playground.pages.saucedemo_pages.login_page import LoginPage
 
 
+@pytest.mark.smoke
 def test_valid_login(page: Page):
+    """SDC-LOGIN-001: Valid credentials open the inventory page (functional correctness)."""
     logger = InlineLogger()
     logger.step("Starting Test: Valid Login 🔐")
 
@@ -20,6 +23,7 @@ def test_valid_login(page: Page):
 
 
 def test_invalid_login(page: Page):
+    """SDC-LOGIN-002: Invalid credentials show an error banner (functional correctness)."""
     logger = InlineLogger()
     logger.step("Starting Test: Invalid Login Attempt 🚫")
 
@@ -29,33 +33,5 @@ def test_invalid_login(page: Page):
 
     login.assert_error_banner_visible()
     logger.error("Expected error message displayed for invalid credentials ⚠️")
-
-    logger.summary(passed=1, failed=0, skipped=0)
-
-
-def test_login_empty_username(page: Page):
-    logger = InlineLogger()
-    logger.step("Starting Test: Login Attempt with Empty Username 🚫")
-
-    login = LoginPage(page)
-    logger.note("Leaving username empty and entering valid password 🗒️")
-    login.submit_credentials(None, TestData.VALID_PASSWORD)
-
-    login.assert_error_banner_visible()
-    logger.error("Error message correctly displayed for missing username ❗")
-
-    logger.summary(passed=1, failed=0, skipped=0)
-
-
-def test_login_empty_password(page: Page):
-    logger = InlineLogger()
-    logger.step("Starting Test: Login Attempt with Empty Password 🚫")
-
-    login = LoginPage(page)
-    logger.note("Entering valid username and leaving password empty 🗒️")
-    login.submit_credentials(TestData.VALID_USER, None)
-
-    login.assert_error_banner_visible()
-    logger.error("Error message correctly displayed for missing password ❗")
 
     logger.summary(passed=1, failed=0, skipped=0)

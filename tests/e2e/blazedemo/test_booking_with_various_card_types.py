@@ -15,7 +15,7 @@ from automation_testing_playground.models.blazedemo_models import (
 fake = Faker()
 
 def test_booking_with_various_card_types(page: Page):
-    """Test booking with different card types - INTENTIONALLY FAILS for one card type."""
+    """BZD-BOOK-003: Booking succeeds across supported card types (functional completeness)."""
     logger = InlineLogger()
 
     logger.step("Starting Test: Booking with Various Card Types")

@@ -1,6 +1,6 @@
 """
 Automation Testing Playground
-A comprehensive test automation framework for functional, performance, and security testing.
+Web UI functional test automation (Playwright + pytest + Page Object Model).
 """
 
 __version__ = "1.0.0"

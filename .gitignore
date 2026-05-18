@@ -765,3 +765,15 @@ test_reports/
 reports/*
 
 !reports/.gitkeep
+
+# CI / local run artifacts (regenerated each run)
+
+Artifacts/
+
+artifacts/
+
+# TypeScript reporting build output
+
+ui/reporting/dist/
+
+ui/reporting/node_modules/

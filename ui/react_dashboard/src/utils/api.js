@@ -22,6 +22,15 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+export const getTestMetrics = async () => {
+  try {
+    const response = await api.get('/metrics')
+    return response.data
+  } catch (error) {
+    return null
+  }
+}
+
 export const getDashboardStats = async () => {
   try {
     const response = await api.get('/dashboard/stats')

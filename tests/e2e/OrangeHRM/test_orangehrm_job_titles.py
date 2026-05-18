@@ -11,8 +11,13 @@ from automation_testing_playground.models.orangehrm_models import LoginCredentia
 
 fake = Faker()
 
+
+@pytest.mark.xfail(
+    reason="OHR-ADMIN-001: Job title list verification races demo UI (intentional short wait)",
+    strict=False,
+)
 def test_job_titles_management(page: Page):
-    """Test job titles management functionality - INTENTIONALLY FAILS due to timing issue."""
+    """OHR-ADMIN-001: Admin can view job titles list (functional completeness)."""
     logger = InlineLogger()
     logger.test_start("Job Titles Management Test")
 

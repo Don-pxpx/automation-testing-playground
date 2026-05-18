@@ -18,9 +18,9 @@ These standards codify the conventions used in this repository so contributors c
   - **Helpers**: `helpers/` — e.g. `InlineLogger`, shared logging/utilities.
   - **Models**: `models/` — Pydantic or dataclass models for test data.
 - **Tests** live under `tests/`:
-  - `tests/e2e/<app>/` — end-to-end (Playwright) tests per app (saucedemo, blazedemo, OrangeHRM).
-  - `tests/integration/` — API/integration tests.
-  - `tests/unit/` — unit tests.
+  - `tests/e2e/<app>/` — end-to-end (Playwright) web UI tests (saucedemo, blazedemo, OrangeHRM).
+  - `tests/conftest.py` — shared fixtures and `reports/metrics-latest.json` export.
+  - Legacy API/integration tests are under `archive/integration-api/`.
 - **No sensitive data in repo.** Config modules use environment variables when set; fallbacks are public-demo values only. Real credentials must never be committed; use `.env` (gitignored) locally and CI secrets in automation.
 
 ### Page Object Model (POM)
@@ -82,7 +82,8 @@ These standards codify the conventions used in this repository so contributors c
 ### Pytest configuration
 
 - Put new tests under `tests/` to be auto-discovered.
-- Use markers defined in `pyproject.toml` (e.g. `smoke`, `e2e`, `integration`) for suite selection. Example: `pytest -m smoke`.
+- Use markers defined in `pytest.ini` / `pyproject.toml` (e.g. `smoke`, `e2e`, `regression`). Example: `pytest tests/e2e/ -m smoke`.
+- Tag tests with requirement IDs in docstrings (see `docs/REQUIREMENTS_TRACE.md`).
 
 ### Documentation and readability
 

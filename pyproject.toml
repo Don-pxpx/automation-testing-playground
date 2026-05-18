@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "automation-testing-playground"
 version = "1.0.0"
-description = "Playwright + pytest automation testing playground: E2E, API, Page Object Model, cross-browser, cross-OS"
+description = "Playwright + pytest web UI automation: E2E, Page Object Model, TypeScript reporting metrics"
 authors = [{name = "Sizwe Lethuli", email = "sizwe.lethuli@example.com"}]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -68,17 +68,12 @@ ignore = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --strict-markers --strict-config"
+addopts = "-ra -q --strict-markers --strict-config -p no:seleniumbase"
 testpaths = ["tests"]
 markers = [
     "smoke: marks tests as smoke/sanity tests",
     "e2e: marks tests as end-to-end (Playwright) tests",
-    "integration: marks tests as integration tests",
-    "performance: marks tests as performance tests",
-    "security: marks tests as security tests",
-    "load: marks tests as load tests",
-    "stress: marks tests as stress tests",
-    "vulnerability: marks tests as vulnerability scans",
+    "regression: marks tests as full functional regression",
     "slow: marks tests as slow",
 ]
 

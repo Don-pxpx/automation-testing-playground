@@ -15,6 +15,7 @@ class LoginPage:
         self.login_button = "button[type='submit']"
         # Updated: include the full class combo for the Dashboard header
         self.dashboard_marker = "h6.oxd-text.oxd-text--h6.oxd-topbar-header-breadcrumb-module"
+        self.error_alert = "p.oxd-text.oxd-text--p.oxd-alert-content-text"
 
     def open_login(self):
         """Open OrangeHRM login page."""
@@ -41,4 +42,26 @@ class LoginPage:
         """Check if dashboard is visible (user is logged in)."""
         self.logger.step("Check if dashboard is visible")
         return self.page.locator(self.dashboard_marker).is_visible()
+
+    def submit_login_attempt(self, username: str, password: str) -> None:
+        """Submit credentials without waiting for dashboard (valid or invalid attempt)."""
+        self.page.fill(self.username_field, username)
+        self.page.fill(self.password_field, password)
+        self.page.click(self.login_button)
+
+    def assert_login_error_contains(self, *fragments: str, timeout: int = 10000) -> str:
+        """Assert the login error alert is visible and contains one of the given fragments."""
+        error_locator = self.page.locator(self.error_alert)
+        error_locator.wait_for(state="visible", timeout=timeout)
+        error_text = error_locator.text_content() or ""
+        if not any(fragment in error_text for fragment in fragments):
+            raise AssertionError(
+                f"Expected one of {fragments!r} in login error, got: {error_text!r}"
+            )
+        return error_text
+
+    def start_fresh_login_session(self) -> None:
+        """Clear session cookies and open the login page."""
+        self.page.context.clear_cookies()
+        self.open_login()
 

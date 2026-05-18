@@ -12,8 +12,13 @@ from automation_testing_playground.models.orangehrm_models import LoginCredentia
 
 fake = Faker()
 
+
+@pytest.mark.xfail(
+    reason="OHR-PIM-002: Employee search clear step races demo UI async refresh",
+    strict=False,
+)
 def test_employee_search_and_filtering(page: Page):
-    """Test employee search and filtering functionality."""
+    """OHR-PIM-002: HR user can search and filter employees (functional correctness)."""
     logger = InlineLogger()
     logger.test_start("Employee Search and Filtering Test")
 

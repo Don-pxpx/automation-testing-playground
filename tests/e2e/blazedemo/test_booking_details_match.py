@@ -15,7 +15,7 @@ from automation_testing_playground.models.blazedemo_models import (
 fake = Faker()
 
 def test_booking_details_match(page: Page):
-    """Test that booking details match between purchase and confirmation - INTENTIONALLY FAILS on price comparison."""
+    """BZD-BOOK-002: Purchase and confirmation details align (functional correctness)."""
     logger = InlineLogger()
     logger.step("Starting Test: Booking Details Match")
 
