@@ -777,3 +777,6 @@ artifacts/
 ui/reporting/dist/
 
 ui/reporting/node_modules/
+
+# Vite entry (exempt from *.html report ignores above)
+!ui/react_dashboard/index.html

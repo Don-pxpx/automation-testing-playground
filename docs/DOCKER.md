@@ -19,7 +19,7 @@ The container has its own network, Python, and Playwright browsers—no host pro
 
 2. **Open a terminal** in the repo (PowerShell or WSL):
    ```powershell
-   cd C:\Users\<You>\.cursor\projects\C-Users-SLethuli\automation-testing-playground
+   cd path\to\automation-testing-playground
    ```
 
 ---

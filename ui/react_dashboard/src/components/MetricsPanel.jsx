@@ -19,19 +19,19 @@ export default function MetricsPanel({ view }) {
         <div className="rounded-xl bg-white/5 p-3">
           <p className="text-gray-400 text-sm">Duration</p>
           <p className="text-2xl font-bold">{headline.durationSeconds}s</p>
-        </motion.div>
+        </div>
         <div className="rounded-xl bg-white/5 p-3">
           <p className="text-gray-400 text-sm">Requirements</p>
           <p className="text-2xl font-bold">{headline.requirementCount}</p>
-        </motion.div>
-        <motion.div className="rounded-xl bg-amber-500/10 p-3">
+        </div>
+        <div className="rounded-xl bg-amber-500/10 p-3">
           <p className="text-amber-300 text-sm">Expected issues</p>
           <p className="text-2xl font-bold text-amber-200">{headline.xfailed}</p>
-        </motion.div>
+        </div>
         <div className="rounded-xl bg-emerald-500/10 p-3">
           <p className="text-emerald-300 text-sm">Pass rate</p>
           <p className="text-2xl font-bold text-emerald-200">{headline.passRate.toFixed(1)}%</p>
-        </motion.div>
+        </div>
       </motion.div>
 
       {suiteChart.length > 0 && (
